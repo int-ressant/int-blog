@@ -3,8 +3,15 @@
   background-repeat: no-repeat;
   background-size: 50%;
   /* background-position-y: bottom; */
-  background-position: 180% 150%;
-  padding: 20em;
-  height: '100%';
-  width:'100%';
+  background-position: 150% 100%;
+  padding: 8em;
+  height: "100%";
+  width: "100%";
+}
+
+.link:hover {
+  /* background-color: yellow; */
+  /* color: red;
+  width: "110%";
+  height: "110%"; */
 }

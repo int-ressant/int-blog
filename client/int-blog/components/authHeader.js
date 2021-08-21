@@ -2,6 +2,7 @@ import { Box, Flex, Link, Spacer, Text } from "@chakra-ui/react";
 import React from "react";
 import Image from "next/image";
 import { Link as LinkN } from "next/link";
+import styles from "../styles/login-st.module.css";
 
 export default function AuthHeader() {
   return (
@@ -16,7 +17,13 @@ export default function AuthHeader() {
       </Box>
       <Spacer />
       <Box p="5" d="flex" flexDirection="row" w="400px">
-        <Link href="/auth/login" fontWeight="bold" mr="10" color="blue.900">
+        <Link
+          className={styles.link}
+          href="/auth/login"
+          fontWeight="bold"
+          mr="10"
+          color="green.light"
+        >
           Entrar
         </Link>
 
