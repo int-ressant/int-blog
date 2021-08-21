@@ -10,11 +10,9 @@ function Login() {
     <div>
       <AuthHeader />
       <Box className={styles.blob}>
-          <Flex>
-    <Box>
-        
-    </Box>
-          </Flex>
+        <Flex>
+          <Box></Box>
+        </Flex>
       </Box>
       {/* <Image
         className="blob"
