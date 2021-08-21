@@ -24,8 +24,8 @@ function Login() {
   const LinkB=({href,mt,txt})=>{
     return(
      
-      <Link mt={mt} href={href}>
-                <Button className={styles.btn} fontWeight='normal' variant='ghost' aria-label={txt} as='a'>
+      <Link mt={mt} className={styles.btn} >
+                <Button as='a' href={href} textDecoration='none' className={styles.btn} fontWeight='normal' variant='ghost' aria-label={txt} >
                 {txt}
                 </Button>
                 </Link>
@@ -126,8 +126,8 @@ function Login() {
               justifyContent="space-around"
               alignItems="center"
             >
-              <MainLink href="/auth/register" txt='Criar uma conta' /> 
-              <MainLink txt="Entrar como convidado" mt="5" href="/auth/register"/>
+              <LinkB href="/auth/register" txt='Criar uma conta' /> 
+              <LinkB txt="Entrar como convidado" mt="5" href="/auth/register"/>
                
             </Flex>
           </Flex>

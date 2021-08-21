@@ -13,6 +13,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Image from "next/image";
+import MainLink from "../../components/mainLink";
 
 function Register() {
   const handleSubmit = async (e) => {
@@ -118,9 +119,9 @@ function Register() {
               justifyContent="space-around"
               alignItems="center"
             >
-              <Link mt="5" href="/">
-                Entrar como convidado
-              </Link>
+              <MainLink txt='Entrar como convidado' mt="5" href="/">
+                
+              </MainLink>
             </Flex>
           </Flex>
         </Flex>
