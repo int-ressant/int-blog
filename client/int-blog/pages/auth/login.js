@@ -4,14 +4,17 @@ import styles from "../../styles/login-st.module.css";
 
 import AuthHeader from "../../components/authHeader";
 import { Box } from "@chakra-ui/layout";
+import { Flex } from "@chakra-ui/react";
 
 function Login() {
   return (
     <div>
       <AuthHeader />
       <Box className={styles.blob}>
-        <Flex>
-          <Box></Box>
+        <Flex align="center">
+          <Box>
+            
+          </Box>
         </Flex>
       </Box>
       {/* <Image

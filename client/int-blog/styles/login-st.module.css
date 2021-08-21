@@ -5,4 +5,6 @@
   /* background-position-y: bottom; */
   background-position: 180% 150%;
   padding: 20em;
+  height: '100%';
+  width:'100%';
 }
