@@ -126,8 +126,8 @@ function Login() {
               justifyContent="space-around"
               alignItems="center"
             >
-              <LinkB href="/auth/register" txt='Criar uma conta' /> 
-              <LinkB txt="Entrar como convidado" mt="5" href="/auth/register"/>
+              <MainLink href="/auth/register" txt='Criar uma conta' /> 
+              <MainLink txt="Entrar como convidado" mt="5" href="/auth/register"/>
                
             </Flex>
           </Flex>
