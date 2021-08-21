@@ -1,7 +1,7 @@
 // import React from "react";
 import Image from "next/image";
 import styles from "../../styles/login-st.module.css";
-
+import {Link as NextLink} from 'next/link'
 import AuthHeader from "../../components/authHeader";
 import { Box } from "@chakra-ui/layout";
 import {
@@ -19,6 +19,17 @@ function Login() {
     e.preventDefault();
     console.log("clicked");
   };
+
+  const LinkB=({href,mt,txt})=>{
+    return(
+     
+      <Link mt={mt} href={href}>
+                <Button className={styles.btn} fontWeight='normal' variant='ghost' aria-label={txt} as='a'>
+                {txt}
+                </Button>
+                </Link>
+    )
+  }
 
   return (
     <div>
@@ -114,10 +125,9 @@ function Login() {
               justifyContent="space-around"
               alignItems="center"
             >
-              <Link href="/auth/register">Criar uma conta</Link>
-              <Link mt="5" href="/auth/register">
-                Entrar como convidado
-              </Link>
+              <LinkB href="/auth/register" txt='Criar uma conta' /> 
+              <LinkB txt="Entrar como convidado" mt="5" href="/auth/register"/>
+               
             </Flex>
           </Flex>
         </Flex>

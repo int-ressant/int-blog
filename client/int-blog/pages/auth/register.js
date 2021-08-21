@@ -101,7 +101,10 @@ function Register() {
                     alignItems="center"
                     justifyContent="space-between"
                   >
+                    <Link href='/auth/login' >
                     <Text>Tenho conta</Text>
+                    </Link>
+                    
                     <Button type="submit" bgColor="green.light" color="white">
                     Criar conta
                     </Button>
@@ -115,7 +118,7 @@ function Register() {
               justifyContent="space-around"
               alignItems="center"
             >
-              <Link mt="5" href="/auth/login">
+              <Link mt="5" href="/">
                 Entrar como convidado
               </Link>
             </Flex>
