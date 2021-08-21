@@ -101,9 +101,9 @@ function Register() {
                     alignItems="center"
                     justifyContent="space-between"
                   >
-                    <Text>Esquecei a senha</Text>
+                    <Text>Tenho conta</Text>
                     <Button type="submit" bgColor="green.light" color="white">
-                      Entrar
+                    Criar conta
                     </Button>
                   </Flex>
                 </FormControl>
@@ -116,7 +116,7 @@ function Register() {
               alignItems="center"
             >
               <Link mt="5" href="/auth/login">
-                Tenho conta
+                Entrar como convidado
               </Link>
             </Flex>
           </Flex>

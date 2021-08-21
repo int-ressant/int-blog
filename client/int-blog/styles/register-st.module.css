@@ -8,3 +8,18 @@
   height: "100%";
   width: "100%";
 }
+
+@media only screen and (max-width:600px) {
+  .blob {
+    background-image: url("/blob2.svg");
+    background-repeat: no-repeat;
+    background-size: 50%;
+    /* background-position-y: bottom; */
+    background-position: 150% 100%;
+    padding: 1em;
+    height: "100%";
+    width: "100%";
+  
+    
+  }
+}
