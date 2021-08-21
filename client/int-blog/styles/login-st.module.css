@@ -1,0 +1,8 @@
+.blob {
+  background-image: url("/blob2.svg");
+  background-repeat: no-repeat;
+  background-size: 50%;
+  /* background-position-y: bottom; */
+  background-position: 180% 150%;
+  padding: 20em;
+}
