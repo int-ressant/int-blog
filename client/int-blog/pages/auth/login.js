@@ -109,7 +109,7 @@ function Login() {
                     alignItems="center"
                     justifyContent="space-between"
                   >
-                    <Link>
+                    <Link href='/auth/forgotPassword' >
                     <Text>Esquecei a senha</Text>
                     </Link>
                     
