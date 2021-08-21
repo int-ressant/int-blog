@@ -1,12 +1,14 @@
-import { Box, Flex, Link, Spacer, Text } from "@chakra-ui/react";
+import { Box, Flex, IconButton, Link, Spacer, Text } from "@chakra-ui/react";
 import React from "react";
 import Image from "next/image";
 import { Link as LinkN } from "next/link";
 import styles from "../styles/login-st.module.css";
+import MainLink from "./mainLink";
 
 export default function AuthHeader() {
   return (
-    <Flex alignItems="center">
+    <>
+    <Flex display={['none','none','flex','flex']} alignItems="center">
       <Box p="5" w="95%">
         <Image
           src={"/intressantLOGO.svg"}
@@ -17,7 +19,8 @@ export default function AuthHeader() {
       </Box>
       <Spacer />
       <Box p="5" d="flex" flexDirection="row" w="400px">
-        <Link
+        <MainLink
+        txt='Entrar'
           className={styles.link}
           href="/auth/login"
           fontWeight="bold"
@@ -25,17 +28,23 @@ export default function AuthHeader() {
           color="green.light"
         >
           Entrar
-        </Link>
+        </MainLink>
 
-        <Link
-          as={LinkN}
+        <MainLink
+          txt='Registar'
           href="/auth/register"
           fontWeight="bold"
           color="blue.900"
         >
-          Registar
-        </Link>
+          
+        </MainLink>
       </Box>
+     
     </Flex>
+    <Flex alignItems='flex-end' justifyContent='flex-end' >
+    <IconButton  display={['flex','flex','none','none']} aria-label='Open Menu' size='lg' mr='5' mt='2' icon={<Image src='/hammenu.svg' width={25} height={25}/>} />
+
+    </Flex>
+    </>
   );
 }
