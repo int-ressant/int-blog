@@ -1,6 +1,7 @@
 import { Box, Button, Flex, FormControl, HStack, Input, Link, PinInput, PinInputField, Text } from '@chakra-ui/react'
 import Image from 'next/image'
 import React, { useState } from 'react'
+import EmailForm from '../../components/emailForm';
 import MainLink from '../../components/mainLink'
 import styles from "../../styles/login-st.module.css";
 
@@ -26,6 +27,8 @@ export default function ForgotPassword() {
       };
 
       const handleGoBack=()=>{
+          setOtp('');
+          
           next==='step1' ? setNext('none') : setNext('step1');
       }
 
@@ -49,31 +52,31 @@ export default function ForgotPassword() {
         },2000)
       }
 
-      const EmailForm=()=>{
-          return(
-              <>
-            <form onSubmit={handleSubmit}>
-            <FormControl id="email">
-              <Flex justifyContent="space-around" flexDirection="column">
-                <Input value={email} onChange={(e=>setEmail(e.currentTarget.value))} variant="filled" placeholder="Email" />
+    //   const EmailForm=()=>{
+    //       return(
+    //           <>
+    //         <form onSubmit={handleSubmit}>
+    //         <FormControl id="email">
+    //           <Flex justifyContent="space-around" flexDirection="column">
+    //             <Input value={email} onChange={(e=>setEmail(e.currentTarget.value))} variant="filled" placeholder="Email" />
                 
-              </Flex>
-              <Flex
-                mt="5"
-                alignItems="center"
-                justifyContent="center"
-              >
+    //           </Flex>
+    //           <Flex
+    //             mt="5"
+    //             alignItems="center"
+    //             justifyContent="center"
+    //           >
                 
                 
-                <Button isLoading={fetching} type="submit" bgColor="green.light" color="white">
-                  Confirmar
-                </Button>
-              </Flex>
-            </FormControl>
-          </form>
-          </>
-          )
-      }
+    //             <Button isLoading={fetching} type="submit" bgColor="green.light" color="white">
+    //               Confirmar
+    //             </Button>
+    //           </Flex>
+    //         </FormControl>
+    //       </form>
+    //       </>
+    //       )
+    //   }
 
       const PasswordForm=()=>{
         return(
@@ -105,7 +108,7 @@ export default function ForgotPassword() {
           <FormControl id="otp">
             <Flex justifyContent="space-around" flexDirection="column">
             <HStack>
-  <PinInput value={otp} otp size='lg' >
+  <PinInput manageFocus onChange={e=>setOtp(e)} variant='filled' value={otp} otp size='lg' >
     <PinInputField />
     <PinInputField />
     <PinInputField />
@@ -161,7 +164,7 @@ export default function ForgotPassword() {
 
             
             <Flex mt='5' w="100%" justifyContent="center">
-             {next==='none' ? <EmailForm/>: next==='step1' ?<OtpForm/> : <PasswordForm/> }
+             {next==='none' ? <EmailForm value={email} id={email} setValue={setEmail} action={handleSubmit} fetching={fetching} />: next==='step1' ?<OtpForm/> : <PasswordForm/> }
             </Flex>
             <Flex
               mt="20"
