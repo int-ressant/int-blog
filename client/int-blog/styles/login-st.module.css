@@ -7,10 +7,10 @@
   padding: 4em;
   height: 80vh;
   width: 100vw;
-
-  
+  animation: animatedBackground 6s ease-in-out infinite alternate;
+  transition: ease-in-out;
 }
-@media only screen and (max-width:600px) {
+@media only screen and (max-width: 600px) {
   .blob {
     background-image: url("/blob2.svg");
     background-repeat: no-repeat;
@@ -20,12 +20,52 @@
     padding: 1em;
     height: "100%";
     width: "100%";
-  
-    
   }
 }
 
-.btn:hover{
+@keyframes animatedBackground {
+  0% {
+    background-position: 150% -50%;
+  }
+ 
+  100% {
+    background-position: 150% 140%;
+  }
+}
+@-moz-keyframes animatedBackground {
+  0% {
+    background-position: 150% 100%;
+  }
+  100% {
+    background-position: 150% 00%;
+  }
+}
+@-webkit-keyframes animatedBackground {
+  0% {
+    background-position: 150% 100%;
+  }
+  100% {
+    background-position: 150% 150%;
+  }
+}
+@-ms-keyframes animatedBackground {
+  0% {
+    background-position: 150% 100%;
+  }
+  100% {
+    background-position: 150% 150%;
+  }
+}
+@-o-keyframes animatedBackground {
+  0% {
+    background-position: 150% 100%;
+  }
+  100% {
+    background-position: 150% 150%;
+  }
+}
+
+.btn:hover {
   text-decoration: none;
 }
 
@@ -35,6 +75,6 @@
   width: "110%";
   height: "110%"; */
 }
-.btn{
+.btn {
   text-decoration: none;
 }

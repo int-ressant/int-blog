@@ -70,6 +70,7 @@ export default function MainForm({
                     onChange={(e) => setValue(e.currentTarget.value)}
                     variant="filled"
                     placeholder="nova password"
+                    type='password'
                   />
                   <Input
                   mt='5'
@@ -77,6 +78,7 @@ export default function MainForm({
                     onChange={(e) => setValue2(e.currentTarget.value)}
                     variant="filled"
                     placeholder="confirmar password"
+                    type='password'
                   />
                 </>
               )}
