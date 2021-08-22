@@ -50,6 +50,9 @@ export default function AuthHeader() {
             mr="10"
             color="green.light"
           />
+          <Box w='100vw' h='10' bgColor='blue.dark' >
+
+          </Box>
 
           <MainLink
             txt="Registar"
