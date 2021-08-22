@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import MainLink from "../components/mainLink";
+import ShortenArticle from "../components/shortenArticle";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
@@ -99,13 +100,14 @@ export default function Home() {
            ></Flex>
           <Flex flexDirection="column" flex="3">
             <ClickablesSection />
-            <AdSection />
+            {/* <AdSection /> */}
+         
             <Flex flex='1'>
               <Flex p="10" w="100%" justifyContent="space-between">
                 <Text ml='5' fontWeight="bold" color="blue.dark">
                   Feed
                 </Text>
-                <Flex pos="relative" flex="1">
+                <Flex  flex="1">
                   <Tabs variant="unstyled" align="end" colorScheme="green">
                     <TabList>
                       <Tab
@@ -141,7 +143,49 @@ export default function Home() {
                     </TabList>
                     <TabPanels>
                       <TabPanel align="start" w="50vw">
-                        <Flex
+                        
+                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
+                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
+                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
+                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
+
+                      </TabPanel>
+                      <TabPanel align="start" w="50vw">
+                        <p>two!</p>
+                      </TabPanel>
+                      <TabPanel align="start" w="50vw"></TabPanel>
+                    </TabPanels>
+                  </Tabs>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Flex>
+          <Flex flex="1"
+          //  bg="green"
+           ></Flex>
+        </Flex>
+      </Box>
+
+      <footer className={styles.footer}>
+        <a
+          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Powered by{" "}
+          <img
+            src="/intressantLOGO.svg"
+            alt="Interessant Logo"
+            className={styles.logo}
+          />
+        </a>
+      </footer>
+    </div>
+  );
+}
+
+
+<Flex
                           borderRadius="10"
                           bg="gray.100"
                           w="100%"
@@ -186,36 +230,3 @@ export default function Home() {
                            
                           </Flex>
                         </Flex>
-                      </TabPanel>
-                      <TabPanel>
-                        <p>two!</p>
-                      </TabPanel>
-                    </TabPanels>
-                  </Tabs>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Flex>
-          <Flex flex="1"
-          //  bg="green"
-           ></Flex>
-        </Flex>
-      </Box>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <img
-            src="/intressantLOGO.svg"
-            alt="Interessant Logo"
-            className={styles.logo}
-          />
-        </a>
-      </footer>
-    </div>
-  );
-}
