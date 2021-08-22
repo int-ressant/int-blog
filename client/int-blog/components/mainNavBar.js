@@ -1,6 +1,9 @@
 import { Box, Flex, IconButton,  MenuButton, Menu, MenuItem, MenuList } from '@chakra-ui/react'
 import React from 'react'
 import styles from '../styles/Home.module.css'
+import {FaUserEdit} from 'react-icons/fa'
+import {VscFolderOpened} from 'react-icons/vsc';
+import {FiLogOut} from 'react-icons/fi'
 
 
 import MainLink from './mainLink'
@@ -34,9 +37,9 @@ export default function MainNavBar() {
             user
             </MenuButton>
             <MenuList>
-            <MenuItem>Editar perfil</MenuItem>
-            <MenuItem>Meus artigos</MenuItem>
-            <MenuItem>Terminar sessao</MenuItem>
+            <MenuItem icon={<FaUserEdit size='20'/>} >Editar perfil</MenuItem>
+            <MenuItem icon={<VscFolderOpened size='20'/>}>Meus artigos</MenuItem>
+            <MenuItem icon={<FiLogOut size='20'/>}>Terminar sessao</MenuItem>
             </MenuList>
             </Menu>
             </Box>
