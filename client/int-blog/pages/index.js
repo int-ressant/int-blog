@@ -19,22 +19,34 @@ export default function Home() {
       </Head>
 
       <Box className={styles.main}>
-        <Flex alignItems='center' border='2px solid red' w="100vw" h="10vh"  flexDirection="row">
-          <nav>
+        <Flex alignItems='center'  w="100vw" h="8vh"  flexDirection="row">
+          
+            <Flex w='25%' >
             <img
               src="/intressantLOGO.svg"
               alt="Interessant Logo"
               className={styles.logo}
             />
-            <Flex flexDirection='row'>
-              <Flex flexDirection='row' >
-                <MainLink txt='Home' fontWeight='bold' href='/'/>
-                <MainLink txt='Artigos' fontWeight='bold' href='/'/>
-                <MainLink txt='Pesquisar' fontWeight='bold' href='/'/>
-                <MainLink txt='Ajuda' fontWeight='bold' href='/'/>
+            </Flex>
+
+            <Flex borderRadius='0px 0px 0px 20px' justifyContent='space-between' alignItems='center' bgColor='blue.dark' flex='1' h='100%' flexDirection='row'>
+              <Flex ml='5' flexDirection='row' >
+                <MainLink color='white' txt='Home' fontWeight='bold' href='/'/>
+                <MainLink color='white' txt='Artigos' fontWeight='bold' href='/'/>
+                <MainLink color='white' txt='Pesquisar' fontWeight='bold' href='/'/>
+                <MainLink color='white' txt='Ajuda' fontWeight='bold' href='/'/>
+              </Flex>
+
+              <Flex mr='10'>
+              <Box p='5' mr='5' as='button' borderRadius='5' bgColor='gray.200'  width='5' height='5' />
+                <Box p='5' as='button' borderRadius='5' bgColor='red.200' width='50' height='50' >
+                Hey
+                </Box>
               </Flex>
             </Flex>
-          </nav>
+            
+            
+         
         </Flex>
 
         <Flex flex="5">
