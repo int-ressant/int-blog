@@ -6,6 +6,7 @@ import { theme } from "../styles/theme";
 import router, { useRouter } from "next/router";
 import AuthHeader from "../components/authHeader";
 import { useEffect, useState } from "react";
+import MainNavBar from "../components/mainNavBar";
 
 function MyApp({ Component, pageProps }) {
   const routeHistory = useRouter();
@@ -21,7 +22,7 @@ function MyApp({ Component, pageProps }) {
 
      {/* //just render de authHeader if the user is at auth routes */}
       {((route === "/auth/login")|| route==="/auth/register"  ) && <AuthHeader />}
-
+      {route==='/' && <MainNavBar/>}
       <Component {...pageProps} />
     </ChakraProvider>
   );
