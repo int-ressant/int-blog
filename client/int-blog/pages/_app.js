@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }) {
       {/* {console.log(routeHistory.pathname)} */}
 
      {/* //just render de authHeader if the user is at auth routes */}
-      {(route === "/auth/login"|| "/auth/register"  ) && <AuthHeader />}
+      {((route === "/auth/login")|| route==="/auth/register"  ) && <AuthHeader />}
 
       <Component {...pageProps} />
     </ChakraProvider>
