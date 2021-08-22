@@ -89,7 +89,7 @@ export default function ForgotPassword() {
             Bem vindo a maior comunidade Mocambicana de devs
           </Text>
           <Text mt="5" color="blue.dark">
-            Recuperar senha
+            { next==='none' ? 'Recuperar senha' : next==='step1'? 'Insira o codigo otp': 'Digite nova password'}
           </Text>
 
           <Flex mt="5" w="100%" justifyContent="center">
