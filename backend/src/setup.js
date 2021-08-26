@@ -6,14 +6,16 @@ require('dotenv').config()
 //routes import
 const UserRoutes = require('./routes/user');
 const TagRoutes = require('./routes/tag');
+const PostRoutes = require('./routes/post');
 
 //setup app JSON
 app.use(express.json());
 
 
 //section for routes
-app.use('/api/users', UserRoutes);
-app.use('/api/tags', TagRoutes);
+app.use('/api', UserRoutes);
+app.use('/api', TagRoutes);
+app.use('/api', PostRoutes);
 
 
 // setup global error handler

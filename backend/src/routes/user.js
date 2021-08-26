@@ -3,8 +3,8 @@ const router = require('express').Router();
 const UserController = require('../controllers/User');
 
 //get routes
-router.post('/register', UserController.createUser);
-router.post('/confirmation', UserController.confirmCode);
-router.post('/signin', UserController.signin);
+router.post('/users/register', UserController.createUser);
+router.post('/users/confirmation', UserController.confirmCode);
+router.post('/users/signin', UserController.signin);
 
 module.exports = router;

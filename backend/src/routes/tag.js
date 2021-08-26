@@ -3,6 +3,11 @@ const router = require('express').Router();
 const TagController = require('../controllers/Tag');
 
 //get routes
-router.post('/register', TagController.createTag);
+router.get('/tags', TagController.getTags);
+//post routes
+router.post('/tags/register', TagController.createTag);
+//put routes
+router.put('/tags/:id', TagController.updateTag);
+//delete routes
 
 module.exports = router;
