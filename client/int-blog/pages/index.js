@@ -1,6 +1,17 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Tag,
+  Text,
+} from "@chakra-ui/react";
 import Head from "next/head";
 import MainLink from "../components/mainLink";
+import ShortenArticle from "../components/shortenArticle";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
@@ -17,7 +28,7 @@ export default function Home() {
         borderRadius="10"
         h="15rem"
         w="10rem"
-        
+        bgGradient='linear(to-t, blue.dark,blue.500)'
       >
         <Text
           textTransform="uppercase"
@@ -28,6 +39,41 @@ export default function Home() {
           w="80%"
         >
           {txt}
+        </Text>
+      </Flex>
+    );
+  };
+
+  const ClickablesSection = () => {
+    return (
+      <Flex
+        flexFlow={["column wrap", "nowrap"]}
+        flexBasis="auto"
+        justifyContent="space-around"
+        p="5"
+      >
+        <Clickables txt="Publicar artigo" />
+        <Clickables txt="Publicar artigo" />
+        <Clickables txt="Publicar artigo" />
+      </Flex>
+    );
+  };
+
+  const AdSection = () => {
+    return (
+      <Flex
+        w="85%"
+        h="10rem"
+        borderRadius="10"
+        justifyContent="center"
+        alignItems="center"
+        as="button"mt='5'
+        alignSelf="center"
+        bgColor="blue.dark"
+        bgGradient='linear(to-r,#6a85b6,#bac8e0)'
+      >
+        <Text color="white" fontWeight="bold" fontSize="xxx-large">
+          
         </Text>
       </Flex>
     );
@@ -47,20 +93,76 @@ export default function Home() {
         />
       </Head>
 
-      <Box  className={styles.main}>
+      <Box className={styles.main}>
         <Flex flex="5">
-          <Flex flex="1" bg="blue"></Flex>
-          <Flex flexDirection='column' flex="3">
-            <Flex flexFlow={['column wrap','nowrap']} flexBasis='auto'  justifyContent="space-around"  p="5">
-              <Clickables txt="Publicar artigo" />
-              <Clickables txt="Publicar artigo" />
-              <Clickables txt="Publicar artigo" />
-            </Flex>
-            <Flex w='85%' h='20%' borderRadius='10' justifyContent='center' alignItems='center' as='button'  alignSelf='center' bgColor='blue.dark' >
-<Text color='white'fontWeight='bold' fontSize='xxx-large' >ANUNCIE AQUI</Text>
+          <Flex flex="1"
+          //  bg="blue"
+           ></Flex>
+          <Flex flexDirection="column" flex="3">
+            <ClickablesSection />
+            {/* <AdSection /> */}
+         
+            <Flex flex='1'>
+              <Flex p="10" w="100%" justifyContent="space-between">
+                <Text ml='5' fontWeight="bold" color="blue.dark">
+                  Feed
+                </Text>
+                <Flex  flex="1">
+                  <Tabs variant="unstyled" align="end" colorScheme="green">
+                    <TabList>
+                      <Tab
+                        _selected={{
+                          bg: "blue.dark",
+                          color: "white",
+                          fontWeight: "bold",
+                          borderRadius: "10",
+                        }}
+                      >
+                        Todos
+                      </Tab>
+                      <Tab
+                        _selected={{
+                          bg: "blue.dark",
+                          color: "white",
+                          fontWeight: "bold",
+                          borderRadius: "10",
+                        }}
+                      >
+                        Sugeridos
+                      </Tab>
+                      <Tab
+                        _selected={{
+                          bg: "blue.dark",
+                          color: "white",
+                          fontWeight: "bold",
+                          borderRadius: "10",
+                        }}
+                      >
+                        Recentes
+                      </Tab>
+                    </TabList>
+                    <TabPanels>
+                      <TabPanel align="start" w="50vw">
+                        
+                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
+                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
+                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
+                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
+
+                      </TabPanel>
+                      <TabPanel align="start" w="50vw">
+                        <p>two!</p>
+                      </TabPanel>
+                      <TabPanel align="start" w="50vw"></TabPanel>
+                    </TabPanels>
+                  </Tabs>
+                </Flex>
+              </Flex>
             </Flex>
           </Flex>
-          <Flex flex="1" bg="green"></Flex>
+          <Flex flex="1"
+          //  bg="green"
+           ></Flex>
         </Flex>
       </Box>
 
@@ -81,3 +183,50 @@ export default function Home() {
     </div>
   );
 }
+
+
+<Flex
+                          borderRadius="10"
+                          bg="gray.100"
+                          w="100%"
+                          h="100%"
+                          flex="5"
+                        >
+                          <Flex p="5" flex="3" flexDirection="column">
+                            <Text py="5" fontSize="xl" fontWeight="bold">
+                              Big ttitle that you cant imagine
+                            </Text>
+                            <Text>
+                              Big ttitle that you cant imagine Big ttitle that
+                              you cant imagine. Big ttitle that you cant imagine
+                              Big ttitle that you cant imagine
+                            </Text>
+                            <Flex alignItems='center' mt="5" >
+                            <Text fontSize="xs" mr='5' color="gray.400">
+                              18:20 25 Jan de 2021
+                            </Text>
+                            <Flex w='50%' justifyContent='space-between'>
+                            <Tag size='sm' bgColor='green.100' >react</Tag>
+                            <Tag size='sm' bgColor='green.100' >javscript</Tag>
+                            <Tag size='sm' bgColor='green.100' >javscript</Tag>
+                            </Flex>
+                            
+                            </Flex>
+                            
+                          </Flex>
+                          <Flex flex="1" pr='5' flexDirection="column">
+                            <Box as='button' bg='green.300' w='100%' borderRadius='0px 0px 10px 10px' h='50%' />
+                            <Text textAlign='center'>username</Text>
+                             <Flex justifyContent='space-around'  mt='2' >
+                               <Box  as='button' >
+                                 <Text fontWeight='bold' >Views</Text>
+                                 <Text>900</Text>
+                               </Box>
+                               <Box>
+                                 <Text fontWeight='bold'>Comm</Text>
+                                 <Text>900</Text>
+                               </Box>
+                               </Flex> 
+                           
+                          </Flex>
+                        </Flex>
