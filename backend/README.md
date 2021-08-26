@@ -1,6 +1,6 @@
 ## **BACKEND DOCUMENTATION**
 #### Users routes
-- Register **METHOD** *POST* [http://localhost:5001/api/users/register](http://localhost:5001/api/users/register)
+- Register **METHOD** *POST* [https://iblogapi.herokuapp.com//api/users/register](https://iblogapi.herokuapp.com//api/users/register)
 > ###### *body* 
 ```
 {
@@ -9,7 +9,7 @@
   "password": Number || String
 }
 ```
-- Confirm code **METHOD** *POST* [http://localhost:5001/api/users/confirmation?type=registration](http://localhost:5001/api/users/confirmation?type=registration)
+- Confirm code **METHOD** *POST* [https://iblogapi.herokuapp.com//api/users/confirmation?type=registration](https://iblogapi.herokuapp.com//api/users/confirmation?type=registration)
 
 > ###### *body* 
 ```
@@ -19,7 +19,7 @@
 }
 ```
 
-- Signin **METHOD** *POST* [http://localhost:5001/api/users/signin](http://localhost:5001/api/users/signin)
+- Signin **METHOD** *POST* [https://iblogapi.herokuapp.com//api/users/signin](https://iblogapi.herokuapp.com//api/users/signin)
 
 > ###### *body* 
 ```
