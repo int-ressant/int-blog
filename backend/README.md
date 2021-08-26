@@ -1,6 +1,5 @@
 ## **BACKEND DOCUMENTATION**
-#### Routes
-> #### **users**
+#### Users routes
 - Register **METHOD** *POST* [http://localhost:5001/api/users/register](http://localhost:5001/api/users/register)
 > ###### *body* 
 ```
