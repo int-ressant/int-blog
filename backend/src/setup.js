@@ -25,8 +25,7 @@ app.use( (error, req, res, next) => {
         message = "Internal server error";
         //Email system staff
     }
-    return res.status(200).json({
-        status: status,
+    return res.status(status).json({
         message: message,
         data: []
     })

@@ -50,8 +50,7 @@ module.exports.createUser = async (req, res, next ) => {
                 const message = `${username} Seja bem vindo a melhor comunidade de programadores de Moçambique. \nCole o codigo abaixo para confirmar a tua conta: ${code}`;
                 await Code.create({user: createdUser.id, code: code, email: email});
                 await sendSms({receiver: email, message, subject: 'Registration'})
-                return res.status(200).json({
-                    status: 201,
+                return res.status(201).json({
                     message: "Conta cadastrada com sucesso",
                     data: []
                 })
@@ -126,8 +125,7 @@ module.exports.signin = async (req, res, next ) => {
             }).select('-password');
             const token = await jwt.sign({id: _user.id }, JWT_SECRET, { expiresIn: '7d'});
 
-            return res.status(200).json({
-                status: 201,
+            return res.status(201).json({
                 message: "Login realizado com sucesso",
                 data: {
                     id: _user.id,
@@ -203,7 +201,6 @@ module.exports.confirmCode = async (req, res, next) => {
                 //assign jwt to enable login
                 const token = await jwt.sign({id: verifiedUser.id }, JWT_SECRET, {expiresIn: '7d'});
                 return res.status(200).json({
-                    status: 200,
                     message: "Conta verificada com sucesso",
                     data: {
                         id: verifiedUser.id,
@@ -213,7 +210,6 @@ module.exports.confirmCode = async (req, res, next) => {
                 })
             }else{
                 return res.status(200).json({
-                    status: 200,
                     message: "Conta verificado com sucesso",
                     data: []
                 })
