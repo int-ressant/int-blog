@@ -4,6 +4,8 @@ const { jwtValidation } = require('../config/jwtValidation');
 const PostController = require('../controllers/Post');
 
 //get routes
+router.get('/posts', PostController.getActivePosts);
+router.get('/posts/all', jwtValidation, PostController.getAll);
 router.post('/posts/register', jwtValidation, PostController.create);
 
 //delete routes

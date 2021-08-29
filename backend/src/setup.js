@@ -1,6 +1,7 @@
 //file for app setup
 const express = require('express');
 const app = express();
+const cors = require('cors');
 require('dotenv').config()
 
 //routes import
@@ -10,7 +11,7 @@ const PostRoutes = require('./routes/post');
 
 //setup app JSON
 app.use(express.json());
-
+app.use(cors());
 
 //section for routes
 app.use('/api', UserRoutes);

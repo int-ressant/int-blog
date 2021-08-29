@@ -3,7 +3,7 @@ const Code = require('../models/code');
 const bcrypt = require('bcrypt');
 const JWT_SECRET = process.env.JWT_SECRET;
 const jwt = require('jsonwebtoken');
-const { sendSms } = require('../config/email')
+const { sendEmail } = require('../config/email')
 
 module.exports.createUser = async (req, res, next ) => {
     try {
@@ -49,7 +49,7 @@ module.exports.createUser = async (req, res, next ) => {
                 const code = Number(Math.random().toString().substr(2, 4));
                 const message = `${username} Seja bem vindo a melhor comunidade de programadores de Moçambique. \nCole o codigo abaixo para confirmar a tua conta: ${code}`;
                 await Code.create({user: createdUser.id, code: code, email: email});
-                await sendSms({receiver: email, message, subject: 'Registration'})
+                await sendEmail({receiver: email, message, subject: 'Registration'})
                 return res.status(201).json({
                     message: "Conta cadastrada com sucesso",
                     data: []

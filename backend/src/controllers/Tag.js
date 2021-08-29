@@ -1,4 +1,4 @@
-const Tag = require('../models/tags');
+const Tag = require('../models/tag');
 const { fireError } = require('../config/error')
 
 module.exports.createTag = async (req, res, next) => {
