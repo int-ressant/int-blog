@@ -28,3 +28,37 @@
   "password": String,
 }
 ```
+
+#### Tag routes
+
+- Register **METHOD** *POST* [https://iblogapi.herokuapp.com/api/tags/register](https://iblogapi.herokuapp.com/api/tags/register)
+> ###### *body* 
+```
+{
+  "name": String,
+  "stug": String <Lowercase />
+}
+```
+
+- Get **METHOD** *GET* [https://iblogapi.herokuapp.com/api/tags](https://iblogapi.herokuapp.com/api/tags)
+> ###### *body* 
+```
+{
+  "createdBy": {
+    "user": String,
+    "username": String
+  },
+  "deleted": Boolean,
+  "id": String,
+  "slug": String,
+  "name": String
+}
+```
+
+- Get **METHOD** *PUT* [https://iblogapi.herokuapp.com/api/tags/tagId](https://iblogapi.herokuapp.com/api/tags/tagId)
+> ###### *body* 
+```
+{
+  "name": String,
+  "slug": String <Lowercase />
+}

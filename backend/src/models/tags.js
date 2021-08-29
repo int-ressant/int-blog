@@ -30,6 +30,14 @@ const TagSchema = Schema({
         type: Boolean,
         default: false
     }
+}, {
+    timestamps: true,
+    toJSON: {
+        transform(doc, obj){
+            obj.id = obj._id
+            delete obj._id
+        }
+    }
 });
 
 module.exports = mongoose.model('Tag', TagSchema);

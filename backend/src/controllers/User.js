@@ -111,7 +111,6 @@ module.exports.signin = async (req, res, next ) => {
                 };
                 if(_user.loginAttempts > 0) _user.loginAttempts -= 1 ;
                 _user.save()
-                console.log(_user.loginAttempts)
                 //define a message to know write attempt or attempts
                 const attemptsMsg = _user.loginAttempts == 1 ? "( 1 tentativa restante)" : `(${_user.loginAttempts} tentativas restantes)` 
                 let error = new Error(`Digitou um login ou uma senha errada. ${attemptsMsg}`);
