@@ -9,7 +9,7 @@ module.exports.jwtValidation = async (req, res, next) => {
         const authorization = req.headers.authorization;
         console.log(req.headers)
         if(!authorization){
-            fireError({status: 401, message: "Você precisa estar logado para continuar."})
+            fireError({status: 401, message: "Sessão não autenticada."})
         }
         const token = authorization.replace('Bearer ', "");
         let userId;
@@ -22,7 +22,7 @@ module.exports.jwtValidation = async (req, res, next) => {
         const _user = await User.findById(userId);
         
         //check if this user was suspended or deleted
-        if(_user.suspended) fireError({status: 401, message: "Conta bloqueada. Contacte o suporte"})
+        if(_user.suspended.status) fireError({status: 401, message: "Conta suspensa. Contacte o suporte"})
         if(_user.deleted) fireError({status: 404, message: "Conta inexistente."})
         req.user = _user;
         next();

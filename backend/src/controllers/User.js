@@ -3,7 +3,7 @@ const Code = require('../models/code');
 const bcrypt = require('bcrypt');
 const JWT_SECRET = process.env.JWT_SECRET;
 const jwt = require('jsonwebtoken');
-const { sendSms } = require('../config/email')
+const { sendEmail } = require('../config/email')
 
 module.exports.createUser = async (req, res, next ) => {
     try {
@@ -49,7 +49,7 @@ module.exports.createUser = async (req, res, next ) => {
                 const code = Number(Math.random().toString().substr(2, 4));
                 const message = `${username} Seja bem vindo a melhor comunidade de programadores de Moçambique. \nCole o codigo abaixo para confirmar a tua conta: ${code}`;
                 await Code.create({user: createdUser.id, code: code, email: email});
-                await sendSms({receiver: email, message, subject: 'Registration'})
+                await sendEmail({receiver: email, message, subject: 'Registration'})
                 return res.status(201).json({
                     message: "Conta cadastrada com sucesso",
                     data: []
@@ -93,7 +93,7 @@ module.exports.signin = async (req, res, next ) => {
         }
 
         if(_user.suspended.status){
-            let error = new Error("Conta bloqueada. Contacte o suporte");
+            let error = new Error("Conta suspensa. Contacte o suporte");
             error.statusCode = 400;
             throw error;
         }
@@ -111,7 +111,6 @@ module.exports.signin = async (req, res, next ) => {
                 };
                 if(_user.loginAttempts > 0) _user.loginAttempts -= 1 ;
                 _user.save()
-                console.log(_user.loginAttempts)
                 //define a message to know write attempt or attempts
                 const attemptsMsg = _user.loginAttempts == 1 ? "( 1 tentativa restante)" : `(${_user.loginAttempts} tentativas restantes)` 
                 let error = new Error(`Digitou um login ou uma senha errada. ${attemptsMsg}`);
@@ -120,8 +119,9 @@ module.exports.signin = async (req, res, next ) => {
             }
 
             //if password match
-            const updatedUser = await User.findOneAndUpdate({ $or: [ { email: email}, { username: username } ]}, { $set: {loginAttempts : 8 }}, {
-                useFindAndModify: false
+            const updatedUser = await User.findOneAndUpdate({ $or: [ { email: email}, { username: username } ]}, { $set: {loginAttempts : 8 }, $inc: { __v: 1 }}, {
+                useFindAndModify: false,
+                new: true
             }).select('-password');
             const token = await jwt.sign({id: _user.id }, JWT_SECRET, { expiresIn: '7d'});
 

@@ -56,7 +56,8 @@ const UserSchema = Schema({
     },
     type: {
         type: String,
-        enum: ["Staff", "Admin", "Member", "Regular" ]
+        enum: ["Staff", "Admin", "Member", "Regular" ],
+        default: "Regular"
     },
     // set loginAttempts to 8
     loginAttempts: {

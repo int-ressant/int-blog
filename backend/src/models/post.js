@@ -64,7 +64,36 @@ const PostSchema = Schema({
             type: Date,
             default: Date.now()
         }
-    }
+    },
+    lastEditBy: {
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        username: String
+    },
+    schedule: {
+        released: {
+            type: Boolean,
+            default: true
+        },
+        immediately: {
+            type: Boolean,
+            default: true
+        },
+        date: {
+            type: Date,
+            default: Date.now()
+        }
+    },
+    tags: [
+        {
+            id: {
+                type: Schema.Types.ObjectId,
+                ref: 'Tag'
+            }
+        }
+    ]
 }, {
     timestamps: true,
     toJSON: {
