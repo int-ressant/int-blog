@@ -30,7 +30,12 @@ const myInit = { method: 'POST',
                mode: 'cors',
                cache: 'default' };
 
-const fecther =(url)=> fetch(url, {method:'POST'}).then((res)=>res.json());
+const fecther =(url
+  ,username,email,password
+  )=> fetch(url, {method:'POST',
+ body:{username:username,email:email,password:password}
+})
+ .then((res)=>res.json());
 
 
 // export const gestServerSideProps=async(req,res)=>{
@@ -49,8 +54,8 @@ function Register() {
   const [username,setUsername]=useState('');
 
   const {data,error}=useSWR(
-    'https://iblogapi.herokuapp.com/api/users/register',
-    fecther
+    [
+      'https://iblogapi.herokuapp.com/api/users/register',username,email,password],(url,username,email,password)=> fecther(url,{username,email,password})
   )
 
   const handleClick = () => setShow(!show);
@@ -66,6 +71,7 @@ function Register() {
 
     if(data){
       console.log(data);
+      console.log(username);
     }
 
     if(error){
