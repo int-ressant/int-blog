@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 import {useRouter} from 'next/router'
+import {Link} from 'next/link'
+import { Box, Text } from '@chakra-ui/react';
 
 export default function NotFound() {
 
@@ -14,9 +16,13 @@ export default function NotFound() {
 
     return (
         <div>
-            <h1>Ooops</h1>
+            <Box p='5' align='center' md='8' >
+            <Text fontSize='40'>Ooops</Text>
             <h2>Pagina nao encontrada</h2>
-            <p>Voltar a <Link hrefef='/'><a>Pagina Inicial</a></Link> </p>
+            <p>Voltar a  </p> 
+            
+            </Box>
+            
         </div>
     )
 }
