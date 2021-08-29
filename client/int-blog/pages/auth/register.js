@@ -18,6 +18,8 @@ import {
 import Image from "next/image";
 import MainLink from "../../components/mainLink";
 import BackButton from "../../components/backButton";
+import { http } from "../../lib/axios";
+// import { http } from "../../../services/http";
 
 function Register() {
   const [next, setNext] = useState("none");
@@ -28,6 +30,7 @@ function Register() {
   const [submited, setSubmited] = useState(false);
   const [validated, setValidated] = useState(false);
   const [show, setShow] = useState(false);
+  const [username,setUsername]=useState('');
 
   const handleClick = () => setShow(!show);
 
@@ -37,10 +40,21 @@ function Register() {
     setValidated(cpassword === password && password.length >= 6);
     validated && setFetching(true);
 
-    setTimeout(() => {
-      setFetching(false);
-      validated && setNext("step1");
-    }, 2000);
+
+    http.get('/users/register',{
+      username:username,
+      email:email,
+      password:password
+    }).then((res)=>{
+      console.log(JSON.stringify(res));
+    }).catch((err)=>{
+      console.log('err',err);
+    })
+
+    // setTimeout(() => {
+    //   setFetching(false);
+    //   validated && setNext("step1");
+    // }, 2000);
 
     console.log("clicked");
   };
@@ -105,6 +119,12 @@ function Register() {
                 <form onSubmit={handleSubmit}>
                   <FormControl id="email">
                     <Flex justifyContent="space-around" flexDirection="column">
+                    <Input
+                        variant="filled"
+                        placeholder="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.currentTarget.value)}
+                      />
                       <Input
                         variant="filled"
                         placeholder="Email"
