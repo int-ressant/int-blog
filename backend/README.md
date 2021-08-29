@@ -40,7 +40,7 @@
 }
 ```
 
-- Get **METHOD** *GET* [https://iblogapi.herokuapp.com/api/tags](https://iblogapi.herokuapp.com/api/tags)
+- Get tags **METHOD** *GET* [https://iblogapi.herokuapp.com/api/tags](https://iblogapi.herokuapp.com/api/tags)
 > ###### *body* 
 ```
 {
@@ -55,7 +55,7 @@
 }
 ```
 
-- Get **METHOD** *PUT* [https://iblogapi.herokuapp.com/api/tags/tagId](https://iblogapi.herokuapp.com/api/tags/tagId)
+- Edit tag **METHOD** *PUT* [https://iblogapi.herokuapp.com/api/tags/tagId](https://iblogapi.herokuapp.com/api/tags/tagId)
 > ###### *body* 
 ```
 {

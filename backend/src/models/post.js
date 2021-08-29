@@ -64,6 +64,13 @@ const PostSchema = Schema({
             type: Date,
             default: Date.now()
         }
+    },
+    lastEditBy: {
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        username: String
     }
 }, {
     timestamps: true,
