@@ -18,8 +18,24 @@ import {
 import Image from "next/image";
 import MainLink from "../../components/mainLink";
 import BackButton from "../../components/backButton";
-import { http } from "../../lib/axios";
-// import { http } from "../../../services/http";
+import useSWR from 'swr'
+
+const myInit = { method: 'POST',
+              //  headers: myHeaders,
+              header:{
+                'Accept':'application/json',
+                'Content-Type': 'application/json',
+               'Access-Control-Allow-Origin':'*',
+              },
+               mode: 'cors',
+               cache: 'default' };
+
+const fecther =(url)=> fetch(url, {method:'POST'}).then((res)=>res.json());
+
+
+// export const gestServerSideProps=async(req,res)=>{
+  
+// }
 
 function Register() {
   const [next, setNext] = useState("none");
@@ -32,6 +48,11 @@ function Register() {
   const [show, setShow] = useState(false);
   const [username,setUsername]=useState('');
 
+  const {data,error}=useSWR(
+    'https://iblogapi.herokuapp.com/api/users/register',
+    fecther
+  )
+
   const handleClick = () => setShow(!show);
 
   const handleSubmit = async (e) => {
@@ -40,16 +61,32 @@ function Register() {
     setValidated(cpassword === password && password.length >= 6);
     validated && setFetching(true);
 
+   
+    
 
-    http.get('/users/register',{
-      username:username,
-      email:email,
-      password:password
-    }).then((res)=>{
-      console.log(JSON.stringify(res));
-    }).catch((err)=>{
-      console.log('err',err);
-    })
+    if(data){
+      console.log(data);
+    }
+
+    if(error){
+      console.log(error);
+    }
+    
+
+    // auth.post('https://iblogapi.herokuapp.com/api/users/register',{
+    //   username:username,
+    //   email:email,
+    //   password:password,
+    //   // headers:{
+    //   //   'Accept':'application/json',
+    //   //   'Content-Type': 'application/json',
+    //   //   'Access-Control-Allow-Origin':'*',
+    //   // }
+    // }).then((res)=>{
+    //   console.log(JSON.stringify(res));
+    // }).catch((err)=>{
+    //   console.log('err',err);
+    // })
 
     // setTimeout(() => {
     //   setFetching(false);
@@ -117,13 +154,15 @@ function Register() {
             <Flex w="100%" justifyContent="center">
               {next === "none" ? (
                 <form onSubmit={handleSubmit}>
-                  <FormControl id="email">
+                  <FormControl >
                     <Flex justifyContent="space-around" flexDirection="column">
                     <Input
                         variant="filled"
                         placeholder="username"
                         value={username}
                         onChange={(e) => setUsername(e.currentTarget.value)}
+                        type='username'
+                        mb='5'
                       />
                       <Input
                         variant="filled"
