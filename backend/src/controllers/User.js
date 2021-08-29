@@ -93,7 +93,7 @@ module.exports.signin = async (req, res, next ) => {
         }
 
         if(_user.suspended.status){
-            let error = new Error("Conta bloqueada. Contacte o suporte");
+            let error = new Error("Conta suspensa. Contacte o suporte");
             error.statusCode = 400;
             throw error;
         }
@@ -120,8 +120,9 @@ module.exports.signin = async (req, res, next ) => {
             }
 
             //if password match
-            const updatedUser = await User.findOneAndUpdate({ $or: [ { email: email}, { username: username } ]}, { $set: {loginAttempts : 8 }}, {
-                useFindAndModify: false
+            const updatedUser = await User.findOneAndUpdate({ $or: [ { email: email}, { username: username } ]}, { $set: {loginAttempts : 8 }, $inc: { __v: 1 }}, {
+                useFindAndModify: false,
+                new: true
             }).select('-password');
             const token = await jwt.sign({id: _user.id }, JWT_SECRET, { expiresIn: '7d'});
 

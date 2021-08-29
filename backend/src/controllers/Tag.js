@@ -15,7 +15,11 @@ module.exports.createTag = async (req, res, next) => {
         }
         const createdTag = await Tag.create({
             slug: slug.toLowerCase(),
-            name: name
+            name: name,
+            createdBy: {
+                user: req.user.id,
+                username: req.user.username 
+            }
         })
         if(createdTag){
             return res.status(201).json({
@@ -47,6 +51,11 @@ module.exports.updateTag = async (req, res, next) => {
         }
         tag.name = name;
         tag.slug = slug;
+        tag.lastEditBy = {
+            user: req.user.id,
+            username: req.user.username 
+        },
+        tag.__v +=1
         if(tag.save()){
             return res.status(201).json({
                 message: "Tag editada com sucesso",

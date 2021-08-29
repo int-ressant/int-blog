@@ -10,6 +10,25 @@ const TagSchema = Schema({
     slug: {
         type: String,
         required: true
+    },
+    createdBy:{
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        },
+        username: String
+    },
+    lastEditBy:{
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        username: String
+    },
+    deleted: {
+        type: Boolean,
+        default: false
     }
 });
 
