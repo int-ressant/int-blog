@@ -88,6 +88,9 @@ const PostSchema = Schema({
     },
     tags: [
         {
+            _id: {
+                auto: false
+            },
             id: {
                 type: Schema.Types.ObjectId,
                 ref: 'Tag'

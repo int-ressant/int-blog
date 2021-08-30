@@ -7,6 +7,7 @@ module.exports.create = async (req, res, next) => {
     try {
         //getting all required fields
         let { title, slug, body, cover, tags, schedule } = req.body;
+        if (req.user.type != 'Staff' && req.user.type != 'Admin') fireError({message: "Você não tem permissão para realizar esta ação", status: 403});
 
         //getting the content inside the token
         if (!title) fireError({ message: "Indique um titulo para a postagem", status: 401 });
@@ -40,13 +41,13 @@ module.exports.create = async (req, res, next) => {
         } 
         const newPost = {
             title,
-            slug,
+            slug: slug.toLowerCase(),
             body,
             tags: _tags,
             approved,
             author: req.user.id,
             schedule: {
-                released: schedule.released ,
+                released: schedule.immediately == true ? true : false ,
                 immediately: schedule.immediately,
                 date: schedule.immediately == true ? Date.now() : schedule.date
             },
@@ -82,7 +83,7 @@ module.exports.create = async (req, res, next) => {
 
 module.exports.getActivePosts = async (req, res, next) => {
     try {
-        const posts = await Post.find({approved: true, suspended: false, deleted: false})
+        const posts = await Post.find({"schedule.released": true, approved: true, suspended: false}).populate('tags.id', 'id name slug')
 
         return res.status(200).json({
             message: "Sucesso",
@@ -103,6 +104,35 @@ module.exports.getAll = async (req, res, next) => {
             message: "Sucesso",
             data: posts
         })
+
+    } catch (error) {
+        if (!error.statusCode) error.statusCode = 500;
+        next(error);
+    }
+}
+
+module.exports.approvePost = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        //check if this user is an admin or staff to complete post approvement
+        if (req.user.type != 'Staff' && req.user.type != 'Admin') fireError({message: "Você não tem permissão para realizar esta ação", status: 403});
+
+
+        const exists = await Post.exists({_id: id});
+        if(!exists) fireError({message: "Postagem inexistente", status: 404});
+
+        //if post exists, we must approve it
+        const approvedPost = await Post.findOneAndUpdate({_id: id}, { $set: { approved: true }}, {
+            new: true,
+            useFindAndModify: false
+        });
+        if(approvedPost){
+            return res.status(200).json({
+                message: "Postagem aprovada com sucesso",
+                data: approvedPost
+            })
+        }
+        fireError({message: "Houve um erro ao aprovar postagem", status: 304})
 
     } catch (error) {
         if (!error.statusCode) error.statusCode = 500;
