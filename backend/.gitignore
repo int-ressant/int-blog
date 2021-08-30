@@ -1,2 +1,9 @@
 node_modules
+<<<<<<< HEAD
 /node_modules
+./node_modules
+node_modules
+./backend/node_modules
+=======
+/node_modules
+>>>>>>> 2cadd022505e0d79ae54aea5105a3bd8d5fb8f04
