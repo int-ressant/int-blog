@@ -83,7 +83,7 @@ module.exports.create = async (req, res, next) => {
 
 module.exports.getActivePosts = async (req, res, next) => {
     try {
-        const posts = await Post.find({"schedule.released": true, approved: true, suspended: false}).populate('tags.id', 'id name slug')
+        const posts = await Post.find({"schedule.released": true, approved: true, suspended: false, deleted: false}).populate('tags.id', 'id name slug')
 
         return res.status(200).json({
             message: "Sucesso",
@@ -98,7 +98,9 @@ module.exports.getActivePosts = async (req, res, next) => {
 
 module.exports.getAll = async (req, res, next) => {
     try {
-        const posts = await Post.find({});
+        
+        if (req.user.type != 'Staff' && req.user.type != 'Admin') fireError({message: "Você não tem permissão para realizar esta ação", status: 403});
+        const posts = await Post.find({}).populate('tags.id', 'id name slug');
 
         return res.status(200).json({
             message: "Sucesso",
@@ -111,29 +113,114 @@ module.exports.getAll = async (req, res, next) => {
     }
 }
 
-module.exports.approvePost = async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        //check if this user is an admin or staff to complete post approvement
-        if (req.user.type != 'Staff' && req.user.type != 'Admin') fireError({message: "Você não tem permissão para realizar esta ação", status: 403});
+
+module.exports.getBySlug = async (req, res, next) => {
+    try{
+        const { slug } = req.params;
+        
+        //get the post by slug
+        const _post = await Post.findOne({
+            slug: slug.toLowerCase(), 
+            "schedule.released": true, 
+            approved: true, 
+            suspended: false
+        }).populate('tags.id', 'id name slug');
+
+        //if we have the post we will set the status to 200 else 404
+        const status = _post ? 200 : 404;
+        
+        return res.status(status).json({
+            message: _post ? "Postagem encontrada" : "Postagem inexistente",
+            data: _post ? _post : {}
+        })
+    }catch(error){
+        if (!error.statusCode) error.statusCode = 500;
+        next(error);
+    }
+}
 
 
-        const exists = await Post.exists({_id: id});
-        if(!exists) fireError({message: "Postagem inexistente", status: 404});
+module.exports.addView = async (req, res, next) => {
+    try{
+        const { slug } = req.params;
+        const validHosts = process.env.VALID_HOST.split(',');
 
-        //if post exists, we must approve it
-        const approvedPost = await Post.findOneAndUpdate({_id: id}, { $set: { approved: true }}, {
+        if(!validHosts.includes(req.headers.host)) fireError({message: "Você não tem permissão para realizar esta ação", status: 403});
+        //get the post by slug
+        let _post = await Post.findOneAndUpdate({slug: slug.toLowerCase()}, { 
+            $set: { "views.lastView": Date.now() },
+            $inc: { "views.count": 1}
+        }, {
             new: true,
             useFindAndModify: false
         });
-        if(approvedPost){
+        //check if this post was viewed at least once
+        if(!_post.views.firstView){
+            _post.views.firstView = Date.now();
+            _post.save();
+        }
+
+
+        //if we have the post we will set the status to 200 else 404
+        const status = _post ? 200 : 404;
+        
+        return res.status(status).json({
+            message: _post ? "View adicionada com sucesso" : "Postagem inexistente",
+            data: _post ? _post.views : {}
+        })
+    }catch(error){
+        if (!error.statusCode) error.statusCode = 500;
+        next(error);
+    }
+}
+
+module.exports.adminActions = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { action } = req.query;
+
+        if (req.user.type != 'Staff' && req.user.type != 'Admin') fireError({message: "Você não tem permissão para realizar esta ação", status: 403});
+        
+        if(!action) fireError({message: "Especifique a ação que deseja realizar", status: 401});
+        let setAction;
+        let message;
+        switch(action){
+            case 'approve':
+                setAction = { approved: true }
+                message: "Postagem aprovada com sucesso"
+                break;
+            case 'delete' :
+                setAction = { deleted: true}
+                message: "Postagem removida com sucesso"
+                break;
+            case 'suspend': 
+                setAction = { suspended: true}
+                message = "Postagem suspensa com sucesso"
+                break;
+            case 'unsuspend':
+                setAction = { suspended: false}
+                message = "Suspenção retirada com sucesso"
+                break;
+            default:
+                fireError({message: "Ação invalida", status: 401});   
+        }
+        const _editedPost = await Post.findOneAndUpdate({_id: id}, {
+            $set: setAction
+        }, {
+            new: true,
+            useFindAndModify: false
+        });
+        if(_editedPost){
             return res.status(200).json({
-                message: "Postagem aprovada com sucesso",
-                data: approvedPost
+                message: message,
+                data: _editedPost
+            })
+        }else{
+            return res.status(401).json({
+                message: "Postagem inexistente",
+                data: []
             })
         }
-        fireError({message: "Houve um erro ao aprovar postagem", status: 304})
-
     } catch (error) {
         if (!error.statusCode) error.statusCode = 500;
         next(error);
