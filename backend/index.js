@@ -6,7 +6,8 @@ require('dotenv').config()
 try{
     mongoose.connect(process.env.MONGO_URL, {
         useUnifiedTopology: true,
-        useNewUrlParser: true
+        useNewUrlParser: true,
+        useCreateIndex: true
     }).then( () => {
         console.log(`We are listening on port ${process.env.PORT}`);
         app.listen(process.env.PORT)
