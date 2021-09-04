@@ -7,9 +7,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 module.exports.jwtValidation = async (req, res, next) => {
     try{
         const authorization = req.headers.authorization;
-        console.log(req.headers)
         if(!authorization){
-            fireError({status: 401, message: "Sessão não autenticada."})
+            fireError({status: 401, message: "Usuário não autenticado."})
         }
         const token = authorization.replace('Bearer ', "");
         let userId;

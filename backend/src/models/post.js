@@ -57,12 +57,10 @@ const PostSchema = Schema({
             default: 0       
         },
         firstView:{
-            type: Date,
-            default: Date.now()
+            type: Date
         },
         lastView: {
-            type: Date,
-            default: Date.now()
+            type: Date
         }
     },
     lastEditBy: {
@@ -88,6 +86,9 @@ const PostSchema = Schema({
     },
     tags: [
         {
+            _id: {
+                auto: false
+            },
             id: {
                 type: Schema.Types.ObjectId,
                 ref: 'Tag'
