@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Flex,
   Tab,
   TabList,
@@ -99,8 +100,14 @@ export default function Home() {
           //  bg="blue"
            ></Flex>
           <Flex flexDirection="column" flex="3">
-            <ClickablesSection />
+            {/* <ClickablesSection /> */}
             {/* <AdSection /> */}
+            <Button alignSelf='center' alignItems='center' justifyContent='center' w='50%' mt='10' borderRadius='5' height='10' backgroundColor='green.400'>
+             
+              <Text color='white' >Publicar artigo</Text>
+              
+              
+            </Button>
          
             <Flex flex='1'>
               <Flex p="10" w="100%" justifyContent="space-between">
