@@ -2,7 +2,7 @@ const Newsletter = require('../models/newsletter');
 const Post = require('../models/post');
 const Tag = require('../models/tag');
 const { fireError } = require('../config/error');
-
+const defaultPaginationSize = parseInt(process.env.DEFAULT_PAGINATION_SIZE);
 module.exports.create = async (req, res, next) => {
     try {
         //getting all required fields
@@ -83,10 +83,25 @@ module.exports.create = async (req, res, next) => {
 
 module.exports.getActivePosts = async (req, res, next) => {
     try {
-        const posts = await Post.find({"schedule.released": true, approved: true, suspended: false, deleted: false}).populate('tags.id', 'id name slug')
+        //pagination
+        const _page = parseInt(req.query.page) || 1;
+        const _offset = parseInt(req.query.offset) || defaultPaginationSize;
+        const _query = {"schedule.released": true, approved: true, suspended: false, deleted: false};
+        const posts = await Post.find(_query).skip((_page - 1) * _offset).limit(_offset).sort({ createdAt: -1}).populate("tags.id", "id name slug")
+        
+        const _total = await Post.countDocuments(_query);
+        const _totalPages = Math.ceil(_total / parseInt(_offset));
+        let _next = null;
+        let _previous = null;
+        if (_page < _totalPages) _next = _page + 1;
+        if (_page > 1 && _total > 0) _previous = _page - 1;
 
         return res.status(200).json({
             message: "Sucesso",
+            previous: _previous,
+            next: _next,
+            currentPage: _page,
+            total: _total,
             data: posts
         })
 
@@ -100,10 +115,23 @@ module.exports.getAll = async (req, res, next) => {
     try {
         
         if (req.user.type != 'Staff' && req.user.type != 'Admin') fireError({message: "Você não tem permissão para realizar esta ação", status: 403});
-        const posts = await Post.find({}).populate('tags.id', 'id name slug');
-
+        //pagination
+        const _page = parseInt(req.query.page) || 1;
+        const _offset = parseInt(req.query.offset) || defaultPaginationSize;
+        const _query = {};
+        const posts = await Post.find(_query).skip((_page -1) * _offset).limit(_offset).populate('tags.id', 'id name slug');
+        const _total = await Post.countDocuments(_query);
+        const _totalPages = Math.ceil(_total / parseInt(_offset));
+        let _next = null;
+        let _previous = null;
+        if (_page < _totalPages) _next = _page + 1;
+        if (_page > 1 && _total > 0) _previous = _page - 1;
         return res.status(200).json({
             message: "Sucesso",
+            previous: _previous,
+            next: _next,
+            currentPage: _page,
+            total: _total,
             data: posts
         })
 
