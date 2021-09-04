@@ -6,7 +6,7 @@ export default function ShortenArticle({title,description,datetime,tag1,tag2,tag
     return (
         <Flex
         borderRadius="10"
-        bg="gray.100"
+        bg="gray.200"
         w="100%"
         h="12rem"
         flex="5"

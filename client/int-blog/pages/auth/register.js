@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../styles/register-st.module.css";
 
 import AuthHeader from "../../components/authHeader";
@@ -14,11 +14,15 @@ import {
   Link,
   Spacer,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import MainLink from "../../components/mainLink";
 import BackButton from "../../components/backButton";
 import useSWR from 'swr'
+import { api } from "../../lib/api";
+import MainForm from "../../components/mainForm";
+import { useRouter } from "next/router";
 
 const myInit = { method: 'POST',
               //  headers: myHeaders,
@@ -30,7 +34,12 @@ const myInit = { method: 'POST',
                mode: 'cors',
                cache: 'default' };
 
-const fecther =(url)=> fetch(url, {method:'POST'}).then((res)=>res.json());
+// const fecther =(url
+//   ,username,email,password
+//   )=> fetch(url, {method:'POST',
+//  body:{username:username,email:email,password:password}
+// })
+//  .then((res)=>res.json());
 
 
 // export const gestServerSideProps=async(req,res)=>{
@@ -47,53 +56,92 @@ function Register() {
   const [validated, setValidated] = useState(false);
   const [show, setShow] = useState(false);
   const [username,setUsername]=useState('');
+  const [otp, setOtp] = useState("");
 
-  const {data,error}=useSWR(
-    'https://iblogapi.herokuapp.com/api/users/register',
-    fecther
-  )
+  const toast=useToast();
+  const router=useRouter();
+  // const {data,error}=useSWR(
+  //   [
+  //     'https://iblogapi.herokuapp.com/api/users/register',username,email,password],(url,username,email,password)=> fecther(url,{username,email,password})
+  // )
+
+  useEffect(()=>{
+    if(next==='step2'){
+      setTimeout(()=>{
+        router.push('/');
+    },3000)
+    }
+    
+},[next])
 
   const handleClick = () => setShow(!show);
+
+  const handleSubmitOtp = async(e) => {
+    e.preventDefault();
+    setFetching(true);
+    console.log(otp);
+    api.post('/users/confirmation?type=registration', {code:otp, email:email}).then((res)=>{
+      console.log(res.data.message);
+      toast({
+        title:'Codigo confirmado com sucesso!',
+        description:res.message,
+        status:'success',
+        duration:5000,
+        isClosable:true,
+      });
+      setNext("step2");
+
+    }).catch((error)=>{
+      console.log(error.response.data.message);
+      toast({
+        title:'Erro ao verificar conta!',
+        description:error.response.data.message,
+        status:'error',
+        duration:5000,
+        isClosable:true,
+      });
+    })
+      setFetching(false);
+      
+    
+  };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmited(true);
     setValidated(cpassword === password && password.length >= 6);
     validated && setFetching(true);
+    api.post('/users/register',{username:username, email:email, password:password}).then((res)=>{
+      console.log(res.data);
+      toast({
+        title:'Conta criada com sucesso!',
+        description:res.message,
+        status:'success',
+        duration:5000,
+        isClosable:true,
+      });
+      setFetching(false);
+      setNext('step1');
 
-   
-    
-
-    if(data){
-      console.log(data);
-    }
-
-    if(error){
+    }).catch((error)=>{
       console.log(error);
-    }
-    
+      console.log(error.response.message);
+      toast({
+        title:'Erro ao criar conta!',
+        description:error.response.data.message,
+        status:'error',
+        duration:5000,
+        isClosable:true,
+      });
+      setFetching(false);
+    })
+ 
 
-    // auth.post('https://iblogapi.herokuapp.com/api/users/register',{
-    //   username:username,
-    //   email:email,
-    //   password:password,
-    //   // headers:{
-    //   //   'Accept':'application/json',
-    //   //   'Content-Type': 'application/json',
-    //   //   'Access-Control-Allow-Origin':'*',
-    //   // }
-    // }).then((res)=>{
-    //   console.log(JSON.stringify(res));
-    // }).catch((err)=>{
-    //   console.log('err',err);
-    // })
-
-    // setTimeout(() => {
-    //   setFetching(false);
-    //   validated && setNext("step1");
-    // }, 2000);
 
     console.log("clicked");
+    setFetching(false);
   };
 
   const handleGoBack = () => {
@@ -146,7 +194,7 @@ function Register() {
               Bem vindo a maior Comunidade Mocambicana
             </Text>
             <Text mt="5" color="blue.dark">
-              Criar conta
+              {next==='step2' ? 'processando...' : 'Criar conta'}
             </Text>
 
             {next === "none" && <SocialLinks />}
@@ -237,14 +285,22 @@ function Register() {
                     </Flex>
                   </FormControl>
                 </form>
-              ) : (
+              ) : next==='step1' ? (
                 <Box p="5" mt="5" textAlign="center" bgColor="green.50">
                   <Text>
                     Enviamos lhe um email, verifique a sua caixa <br /> de
                     entrada no seu email.
                   </Text>
+                  <MainForm
+                otp
+                value={otp}
+                
+                setValue={setOtp}
+                action={handleSubmitOtp}
+                fetching={fetching}
+              />
                 </Box>
-              )}
+              ):next === 'step2' && <Box mt='5'><Text>Conta verificada com sucesso</Text><Text>Redirecionando para pagina principal</Text></Box>}
             </Flex>
             <Flex
               mt="10"
@@ -252,6 +308,7 @@ function Register() {
               justifyContent="space-around"
               alignItems="center"
             >
+              
               {next === "none" ? (
                 <>
                   <MainLink txt="Entrar como convidado" mt="5" href="/" />
