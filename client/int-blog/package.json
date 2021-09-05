@@ -12,6 +12,7 @@
     "@emotion/react": "11",
     "@emotion/styled": "11",
     "@fontsource/montserrat": "^4.5.1",
+    "@uiw/react-md-editor": "3.6.0",
     "axios": "^0.21.2",
     "cors": "^2.8.5",
     "framer-motion": "4",
