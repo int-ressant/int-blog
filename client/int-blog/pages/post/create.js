@@ -10,6 +10,7 @@ import {Textarea, Input, Tag, TagLabel, TagCloseButton, useToast} from '@chakra-
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
+import { useRouter } from 'next/router'
 
 const MDEditor = dynamic(
     () => import("@uiw/react-md-editor").then((mod) => mod.default),
@@ -22,12 +23,19 @@ export default function CreatePost() {
     const [tags,setTags]= useState([]);
     const [tag,setTag]=useState('');
     const toast=useToast();
+    const router=useRouter();
 
     const handleAddTag=(tagname)=>{
         if(tags.find((tag)=>tag===tagname)){
             console.log('error');
             toast({
                 title:'tag ja existe',
+                status:'warning',
+                position:'top'
+            })
+        }else if(!tagname){
+            toast({
+                title:'tag invalida',
                 status:'warning',
                 position:'top'
             })
@@ -47,7 +55,7 @@ export default function CreatePost() {
     return (
         <Box backgroundColor='gray.100' flex='1' >
             <Flex flex='1' justifyContent='space-between' >
-            <Box flex='1' w='25vw' h='100vh'  ><Button backgroundColor='transparent' leftIcon={<FiChevronLeft/>}><Text>Voltar</Text></Button></Box>
+            <Box flex='1' w='25vw' h='100vh'  ><Button onClick={()=>router.back()} backgroundColor='transparent' leftIcon={<FiChevronLeft/>}><Text>Voltar</Text></Button></Box>
             
             <Box w='50vw' h='100vh'>
                 <Image src={'/intressantLOGO.svg'} width={45} height={45}/>
