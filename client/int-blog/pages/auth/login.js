@@ -37,13 +37,11 @@ function Login() {
     
     e.preventDefault();
 
-    let edata={email:email,password:password};
-  let udata={username:email,password:password};
+
 
     console.log("clicked");
-    setData(email.toLocaleLowerCase().includes('@') ? {email:email,password:password} :{username:email,password:password});
-    console.log(data);
-    api.post('/users/signin', email.toLocaleLowerCase().includes('@') ? {email:email,password:password} :{username:email,password:password}).then((res)=>{
+  
+    api.post('/users/signin', email.toLowerCase().includes('@') ? {email:email,password:password} :{username:email,password:password}).then((res)=>{
       console.log(res.message);
       toast({
         title:'Logando...',

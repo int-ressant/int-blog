@@ -215,7 +215,7 @@ function Register() {
                         errorBorderColor="red.200"
                         isInvalid={username.toLowerCase().includes('@')}
                       />
-                      {username.toLowerCase().includes('@') && <Text mt='1' mb='1' fontSize="xx-small" color="red.400">username nao pode conter @</Text>}
+                      {(username.toLowerCase().includes('@') && !!username) && <Text mt='1' mb='1' fontSize="xx-small" color="red.400">username nao pode conter @</Text>}
                       <Input
                         variant="filled"
                         placeholder="Email"
@@ -224,7 +224,7 @@ function Register() {
                         isInvalid={!email.toLowerCase().includes('@') | !email.toLocaleLowerCase().includes('.')}
                         errorBorderColor="red.200"
                       />
-                      {!email.toLowerCase().includes('@') | !email.toLocaleLowerCase().includes('.') ? <Text mt='1' fontSize="xx-small" color="red.400">email invalido</Text> : null}
+                      {(!email.toLowerCase().includes('@') | !email.toLocaleLowerCase().includes('.')) && !!email ? <Text mt='1' fontSize="xx-small" color="red.400">email invalido</Text> : null}
                       <InputGroup mt='5' size="md">
                         <Input
                           pr="4.5rem"
