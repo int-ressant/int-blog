@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 const JWT_SECRET = process.env.JWT_SECRET;
 const jwt = require('jsonwebtoken');
 const { fireError } = require('../config/error');
-const user = require('../models/user');
 
 module.exports.sendCode = async (req, res, next) => {
     try {

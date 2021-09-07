@@ -10,6 +10,7 @@ module.exports.create = async (req, res, next) => {
         if (req.user.type != 'Staff' && req.user.type != 'Admin') fireError({message: "Você não tem permissão para realizar esta ação", status: 403});
 
         //getting the content inside the token
+        if (tags.length == 0) fireError({ message: "Indique no mínimo uma tag.", status: 401 });
         if (!title) fireError({ message: "Indique um titulo para a postagem", status: 401 });
         if (!slug) fireError({ message: "Indique o link para a postagem", status: 401 });
         if (body.length < 100) fireError({ message: "Adicione mais conteudo para a postagem", status: 401 });
@@ -17,10 +18,6 @@ module.exports.create = async (req, res, next) => {
         //check if we have an post with the same title or slug
         const exists = await Post.findOne({ $or: [{ title: title }, { slug: slug }] });
 
-        //fetch for post tag
-        const tagExists = await Tag.exists({ _id: { $in: tags } });
-
-        if (!tagExists) fireError({ message: "Selecione uma tag para a tua postagem.", status: 401 })
 
         if (exists && title == exists.title) fireError({ message: "Já existe uma postagem com o mesmo título.Escolha outro título", status: 401 })
 
@@ -29,11 +26,6 @@ module.exports.create = async (req, res, next) => {
         let approved = false;
         if (req.user.type == 'Staff' || req.user.type == 'Admin') approved = true;
         
-        //set post tags
-        let _tags = []
-        tags.map(tag => {
-            return _tags.push({id: tag})
-        })
         if(!schedule) schedule = {
             released: true,
             immediately: true,
@@ -43,7 +35,7 @@ module.exports.create = async (req, res, next) => {
             title,
             slug: slug.toLowerCase(),
             body,
-            tags: _tags,
+            tags: tags,
             approved,
             author: req.user.id,
             schedule: {
@@ -56,6 +48,7 @@ module.exports.create = async (req, res, next) => {
         const postCreated = await Post.create(newPost);
 
         if (postCreated) {
+            tags.map()
             // const activeNewsletter = await Newsletter.find({
             //     $or: [
             //         { allTags: true },

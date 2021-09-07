@@ -84,17 +84,10 @@ const PostSchema = Schema({
             default: Date.now()
         }
     },
-    tags: [
-        {
-            _id: {
-                auto: false
-            },
-            id: {
-                type: Schema.Types.ObjectId,
-                ref: 'Tag'
-            }
-        }
-    ]
+    tags: [{
+        type: String,
+        required: true
+    }]
 }, {
     timestamps: true,
     toJSON: {
