@@ -12,13 +12,56 @@ import {
   Link,
   Spacer,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import MainLink from "../../components/mainLink";
+import { api } from "../../lib/api";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 function Login() {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [data,setData]=useState({});
+  const toast=useToast();
+  const router=useRouter();
+
+  
+
+
+
+
+
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
+
+
+
     console.log("clicked");
+  
+    api.post('/users/signin', email.toLowerCase().includes('@') ? {email:email,password:password} :{username:email,password:password}).then((res)=>{
+      console.log(res.message);
+      toast({
+        title:'Logando...',
+        description:res.message,
+        status:'success',
+        duration:5000,
+        isClosable:true,
+      });
+      router.push('/');
+
+    }).catch((error)=>{
+      console.log(error.response.data);
+      toast({
+        title:'Erro ao logar!',
+        description:error.response.data.message,
+        status:'error',
+        duration:5000,
+        isClosable:true,
+      })
+    })
   };
 
   const LinkB=({href,mt,txt})=>{
@@ -96,8 +139,9 @@ function Login() {
               <form onSubmit={handleSubmit}>
                 <FormControl id="email">
                   <Flex justifyContent="space-around" flexDirection="column">
-                    <Input variant="filled" placeholder="Email" />
+                    <Input value={email} onChange={(e)=>setEmail(e.currentTarget.value)} variant="filled" placeholder="Email" />
                     <Input
+                    value={password} onChange={(e)=>setPassword(e.currentTarget.value)}
                       type="password"
                       mt="5"
                       variant="filled"

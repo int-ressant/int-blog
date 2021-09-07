@@ -11,12 +11,15 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import MainLink from "../components/mainLink";
 import ShortenArticle from "../components/shortenArticle";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
-  const handlePublish = () => {};
+  const handlePublish = () => {router.push('/post/create')};
+
+  const router=useRouter();
 
   const Clickables = ({ txt }) => {
     return (
@@ -102,7 +105,7 @@ export default function Home() {
           <Flex flexDirection="column" flex="3">
             {/* <ClickablesSection /> */}
             {/* <AdSection /> */}
-            <Button alignSelf='center' alignItems='center' justifyContent='center' w='50%' mt='10' borderRadius='5' height='10' backgroundColor='green.400'>
+            <Button onClick={handlePublish} alignSelf='center' alignItems='center' justifyContent='center' w='50%' mt='10' borderRadius='5' height='10' backgroundColor='green.400'>
              
               <Text color='white' >Publicar artigo</Text>
               

@@ -57,6 +57,7 @@ function Register() {
   const [show, setShow] = useState(false);
   const [username,setUsername]=useState('');
   const [otp, setOtp] = useState("");
+  const [errorMessage,setErrorMessage]=useState('');
 
   const toast=useToast();
   const router=useRouter();
@@ -113,7 +114,7 @@ function Register() {
     setSubmited(true);
     setValidated(cpassword === password && password.length >= 6);
     validated && setFetching(true);
-    api.post('/users/register',{username:username, email:email, password:password}).then((res)=>{
+    api.post('/users/register',{username:username.toLocaleLowerCase(), email:email.toLocaleLowerCase(), password:password}).then((res)=>{
       console.log(res.data);
       toast({
         title:'Conta criada com sucesso!',
@@ -211,13 +212,19 @@ function Register() {
                         onChange={(e) => setUsername(e.currentTarget.value)}
                         type='username'
                         mb='5'
+                        errorBorderColor="red.200"
+                        isInvalid={username.toLowerCase().includes('@')}
                       />
+                      {(username.toLowerCase().includes('@') && !!username) && <Text mt='1' mb='1' fontSize="xx-small" color="red.400">username nao pode conter @</Text>}
                       <Input
                         variant="filled"
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.currentTarget.value)}
+                        isInvalid={!email.toLowerCase().includes('@') | !email.toLocaleLowerCase().includes('.')}
+                        errorBorderColor="red.200"
                       />
+                      {(!email.toLowerCase().includes('@') | !email.toLocaleLowerCase().includes('.')) && !!email ? <Text mt='1' fontSize="xx-small" color="red.400">email invalido</Text> : null}
                       <InputGroup mt='5' size="md">
                         <Input
                           pr="4.5rem"
@@ -264,6 +271,7 @@ function Register() {
                           passwords devem ser iguais
                         </Text>
                       )}
+                      
                     </Flex>
                     <Flex
                       mt="5"
