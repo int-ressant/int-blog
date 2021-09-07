@@ -38,19 +38,27 @@ module.exports.createUser = async (req, res, next ) => {
         }else{
             const salt = await bcrypt.genSalt(12);
             const hash = await bcrypt.hash(password, salt);
+            const admins = ["tsenane14@gmail.com", "00caf3@gmail.com", "hello@tomascaetano.com"];
+            let _type = "Regular";
+
+            if(admins.includes(email)) type = _type = "Staff";
+
             const newUser = await User.create({
                 username: username,
                 email: email,
                 password: hash,
-                gender: gender || "Undefined"
+                gender: gender || "Undefined",
+                type: _type
             });
             const createdUser = await User.create(newUser);
             if(createdUser){
                 //registration code
                 const code = Number(Math.random().toString().substr(2, 4));
                 const message = `${username} Seja bem vindo a melhor comunidade de programadores de Moçambique. \nCole o codigo abaixo para confirmar a tua conta: ${code}`;
+                
                 await Code.create({user: createdUser.id, code: code, email: email});
                 await sendEmail({receiver: email, message, subject: 'Registration'})
+                
                 return res.status(201).json({
                     message: "Conta cadastrada com sucesso",
                     data: []

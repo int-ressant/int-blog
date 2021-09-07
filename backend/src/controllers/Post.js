@@ -48,7 +48,18 @@ module.exports.create = async (req, res, next) => {
         const postCreated = await Post.create(newPost);
 
         if (postCreated) {
-            tags.map()
+            tags.map(async (tag) => {
+                let exists = await Tag.exists({name: tag, slug: tag.toLowerCase()});
+                if(!exists){
+                    await Tag.create({
+                        name: tag,
+                        slug: tag.toLowerCase(),
+                        "createdBy.user": req.user.id,
+                        "createdBy.username": req.user.username
+                    })
+                }
+                
+            })
             // const activeNewsletter = await Newsletter.find({
             //     $or: [
             //         { allTags: true },
