@@ -71,7 +71,7 @@ module.exports.updateTag = async (req, res, next) => {
 
 module.exports.getTags = async (req, res, next) => {
     try {
-        const tags = await Tag.find({});
+        const tags = await Tag.find({}, { name: 1, slug: 1 });
         return res.status(200).json({
             message: "",
             data: tags

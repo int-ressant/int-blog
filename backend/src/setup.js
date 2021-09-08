@@ -8,12 +8,14 @@ require('dotenv').config()
 const UserRoutes = require('./routes/user');
 const TagRoutes = require('./routes/tag');
 const PostRoutes = require('./routes/post');
+const CodeRoutes = require('./routes/code');
 
 //setup app JSON
 app.use(express.json());
 app.use(cors());
 
 //section for routes
+app.use('/api', CodeRoutes);
 app.use('/api', UserRoutes);
 app.use('/api', TagRoutes);
 app.use('/api', PostRoutes);

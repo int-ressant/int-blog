@@ -9,7 +9,6 @@ router.get('/users/:username', UserController.getUserByUsernane);
 
 //post routes
 router.post('/users/register', UserController.createUser);
-router.post('/users/confirmation', UserController.confirmCode);
 router.post('/users/signin', UserController.signin);
 
 module.exports = router;
