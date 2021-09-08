@@ -96,7 +96,11 @@ export default function CreatePost() {
                         </Box>
 
                     </Flex>
-                    <Flex placeholder='something' mt='5' h='50vh' w='100%' backgroundColor='white'>
+                    <Flex placeholder='something' mt='5' h='50vh' w='100%' flexDirection='column' backgroundColor='white'>
+                        <Box mb='5'>
+                            
+                            <Input textStyle='bold' placeholder='Your title here...' p='5' size='lg' />
+                        </Box>
                         <MDEditor style={{width: '100%', height: '500px' }} height={350}  value={data} onChange={(e)=>setData(e)}/>
                     </Flex>
                     <Flex mt='10' w='80%' justifyContent='space-between'>
