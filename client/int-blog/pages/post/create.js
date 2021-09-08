@@ -49,7 +49,7 @@ export default function CreatePost() {
         // const newTgas=tags;
     //    const newTags= !tags.filter((tag)=>tag===tagname);
   
-        setTags(oldTags=> oldTags.filter((tag)=>tag===!tagname))
+        setTags(oldTags=> oldTags.filter((tag)=>tag!==tagname))
     }
 
     return (

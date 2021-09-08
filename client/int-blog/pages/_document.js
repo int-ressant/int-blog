@@ -11,7 +11,7 @@ class MyDocument extends Document {
       <Html>
           
         <Head>
-        <link rel="preload" href="https://iblogapi.herokuapp.com/api/" as="fetch" crossorigin="anonymous"/>
+        <link rel="preload" href="https://iblogapi.herokuapp.com/api/" as="fetch" crossOrigin="anonymous"/>
         </Head>
         <body>
           <Main />
