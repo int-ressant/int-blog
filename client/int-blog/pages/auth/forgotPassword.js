@@ -9,12 +9,14 @@ import {
   PinInput,
   PinInputField,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import React, { useState } from "react";
 import MainForm from "../../components/mainForm";
 
 import MainLink from "../../components/mainLink";
+import { api } from "../../lib/api";
 import styles from "../../styles/login-st.module.css";
 
 export default function ForgotPassword() {
@@ -25,14 +27,34 @@ export default function ForgotPassword() {
   const [cPassword, setCPassword] = useState("");
   const [otp, setOtp] = useState("");
 
+  const toast=useToast();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFecthing(true);
+    if(email.includes('@') && email.includes('.')){
+      setFecthing(true);
     console.log(email);
-    setTimeout(() => {
+
+    api.post('/codes/confirmation?type=registration',{email:email}).then((res)=>{
+      console.log(res.data);
       setFecthing(false);
-      setNext("step1");
-    }, 2000);
+    }).catch((err)=>{
+      console.log(err.response.data);
+      setFecthing(false);
+    })
+    }else{
+      toast({
+        title:'Email invalido',
+        status:'warning',
+
+      })
+    }
+    
+
+    // setTimeout(() => {
+    //   setFecthing(false);
+    //   setNext("step1");
+    // }, 2000);
   };
 
   const handleGoBack = () => {
