@@ -7,7 +7,6 @@ module.exports.create = async (req, res, next) => {
     try {
         //getting all required fields
         let { title, slug, body, cover, tags, schedule } = req.body;
-        if (req.user.type != 'Staff' && req.user.type != 'Admin') fireError({message: "Você não tem permissão para realizar esta ação", status: 403});
 
         //getting the content inside the token
         if (tags.length == 0) fireError({ message: "Indique no mínimo uma tag.", status: 401 });
@@ -187,7 +186,7 @@ module.exports.addView = async (req, res, next) => {
             useFindAndModify: false
         });
         //check if this post was viewed at least once
-        if(!_post.views.firstView){
+        if(_post && !_post.views.firstView){
             _post.views.firstView = Date.now();
             _post.save();
         }
@@ -248,7 +247,7 @@ module.exports.adminActions = async (req, res, next) => {
                 data: _editedPost
             })
         }else{
-            return res.status(401).json({
+            return res.status(404).json({
                 message: "Postagem inexistente",
                 data: []
             })

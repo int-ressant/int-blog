@@ -2,6 +2,9 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const swaggerUI = require('swagger-ui-express');
+const swaggerDocumment = require('../swagger.json');
+
 require('dotenv').config()
 
 //routes import
@@ -9,6 +12,7 @@ const UserRoutes = require('./routes/user');
 const TagRoutes = require('./routes/tag');
 const PostRoutes = require('./routes/post');
 const CodeRoutes = require('./routes/code');
+
 
 //setup app JSON
 app.use(express.json());
@@ -19,7 +23,7 @@ app.use('/api', CodeRoutes);
 app.use('/api', UserRoutes);
 app.use('/api', TagRoutes);
 app.use('/api', PostRoutes);
-
+app.use('/api', swaggerUI.serve, swaggerUI.setup(swaggerDocumment));
 
 // setup global error handler
 app.use( (error, req, res, next) => {

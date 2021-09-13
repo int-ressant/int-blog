@@ -70,7 +70,6 @@ module.exports.confirmCode = async (req, res, next) => {
     try{
         const {code, email, id, newPassword } = req.body;
         const { type } = req.query;
-        
         if(!code){
             let error = new Error("Insira o teu codigo de confirmação");
             error.statusCode = 400;
@@ -78,9 +77,13 @@ module.exports.confirmCode = async (req, res, next) => {
         }
         if(!type){
             let error = new Error("Tipo de requisição inválida");
-            error.statusCode = 400;
+            error.statusCode = 405;
             throw error;
         }
+        
+        const validTypes = [ "registration", "forgotPassword"];
+
+        if(!validTypes.includes(type)) fireError({message: "Tipo de requisição inválida", status: 405});
         
         if(type == 'registration' && !email){
             let error = new Error("Email inválido");
@@ -126,7 +129,7 @@ module.exports.confirmCode = async (req, res, next) => {
             throw error;
         }else if(userCode.code != code){
             let error = new Error("Codigo inválido");
-            error.statusCode = 404;
+            error.statusCode = 401;
             throw error;
         }
         
@@ -153,10 +156,11 @@ module.exports.confirmCode = async (req, res, next) => {
                 setAction = { password: hash }
                 break;
             default:
-                fireError({message: "Ação invalida", status: 401});  
+                fireError({message: "Acão invalida", status: 401});  
         }
         const updatedUser = await User.findOneAndUpdate({ $or: [ { _id: id}, { email: email } ] }, {
-            $set: setAction
+            $set: setAction,
+            $inc: { __v: 1}
         }, {
             new: true,
             useFindAndModify: false
@@ -181,7 +185,7 @@ module.exports.confirmCode = async (req, res, next) => {
                     }
                 })
             }else if(type == 'forgotPassword'){
-                return res.status(200).json({
+                return res.status(201).json({
                     message: "Senha atualizada com sucesso",
                     data: []
                 })

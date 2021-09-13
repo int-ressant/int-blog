@@ -35,7 +35,7 @@ export default function ForgotPassword() {
       setFecthing(true);
     console.log(email);
 
-    api.post('/codes/confirmation?type=registration',{email:email}).then((res)=>{
+    api.post('/codes/register?type=forgotPassword',{email:email}).then((res)=>{
       console.log(res.data);
       setFecthing(false);
     }).catch((err)=>{
