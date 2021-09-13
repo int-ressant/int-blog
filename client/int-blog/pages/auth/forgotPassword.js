@@ -35,9 +35,17 @@ export default function ForgotPassword() {
       setFecthing(true);
     console.log(email);
 
+ 
+
     api.post('/codes/register?type=forgotPassword',{email:email}).then((res)=>{
       console.log(res.data);
       setFecthing(false);
+      toast({
+        title:res.data.message,
+        status:'success',
+        duration:7000,
+      })
+      setNext("step1");
     }).catch((err)=>{
       console.log(err.response.data);
       setFecthing(false);
@@ -53,7 +61,7 @@ export default function ForgotPassword() {
 
     // setTimeout(() => {
     //   setFecthing(false);
-    //   setNext("step1");
+      // setNext("step1");
     // }, 2000);
   };
 
@@ -65,25 +73,69 @@ export default function ForgotPassword() {
 
   const handleSubmitOtp = async(e) => {
     e.preventDefault();
-    setFecthing(true);
-    console.log(otp);
-    setTimeout(() => {
-      setFecthing(false);
+    
+    if(otp.length===4){
+      setFecthing(true);
       setNext("step2");
-    }, 2000);
+      setFecthing(false);
+    }else{
+      toast({
+        title:'Codigo invalido, preencha todos campos',
+        status:'warning'
+      })
+    }
+    
+    
+    
+    console.log(otp.length);
+    // setTimeout(() => {
+    //   setFecthing(false);
+    //   setNext("step2");
+    // }, 2000);
   };
 
   const handleSubmitPass = async(e) => {
     e.preventDefault();
     setFecthing(true);
-    console.log(pass);
-    setTimeout(() => {
+
+    api.post('/codes/confirmation?type=forgotPassword',{email,code:otp, password:password}).then((res)=>{
+      console.log(res.data);
       setFecthing(false);
       setNext("step3");
-    }, 2000);
+
+    }).catch((err)=>{
+      console.log(err.response.data.message);
+      toast({
+        title:err.response.data.message,
+        status:'error'
+      });
+      setFecthing(false);
+    })
+    console.log(password);
+    // setTimeout(() => {
+    //   setFecthing(false);
+    //   setNext("step3");
+    // }, 2000);
   };
 
- 
+ const handleResend=async(e)=>{
+
+e.preventDefault();
+  api.post('/codes/register?type=forgotPassword',{email:email}).then((res)=>{
+    console.log(res.data);
+    setFecthing(false);
+    toast({
+      title:res.data.message,
+      status:'success',
+      duration:7000,
+    })
+    setNext("step1");
+  }).catch((err)=>{
+    console.log(err.response.data);
+    setFecthing(false);
+  })
+  
+ }
 
   // if(next==='none'){
   //     return null
@@ -119,12 +171,13 @@ export default function ForgotPassword() {
               <MainForm
                 email
                 value={email}
-                id={email}
+                // id={email}
                 setValue={setEmail}
                 action={handleSubmit}
                 fetching={fetching}
               />
             ) : next === "step1" ? (
+              <Flex flexDirection='column'>
               <MainForm
                 otp
                 value={otp}
@@ -133,6 +186,8 @@ export default function ForgotPassword() {
                 action={handleSubmitOtp}
                 fetching={fetching}
               />
+              <Text fontSize='small' mt='8' as='button' type='submit' onClick={handleResend} >Reenviar código</Text>
+              </Flex>
             ) : (
               <MainForm pass value={password}
              
