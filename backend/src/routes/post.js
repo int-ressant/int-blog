@@ -10,6 +10,7 @@ router.get('/posts/:slug/single', PostController.getBySlug);
 router.post('/posts/:slug/view', PostController.addView);
 router.post('/posts/register', jwtValidation, PostController.create);
 router.put('/posts/admin/:id/edit', jwtValidation, PostController.adminActions);
+router.put('/posts/:id/edit', jwtValidation, PostController.edit);
 
 //delete routes
 

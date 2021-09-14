@@ -476,8 +476,8 @@
         },
         "/api/posts/admin/{id}/edit": {
             "put": {
-                "summary": "Editar postagem",
-                "description": "Rota que edita postagem",
+                "summary": "Rota para aprovar, eliminar, suspender e retirar suspensão da postagem ( para staffs e admin)",
+                "description": "Rota para aprovar, eliminar, suspender e retirar suspensão da postagem ( para staffs e admin)",
                 "tags": ["Posts"],
                 "parameters": [
                     {
@@ -504,6 +504,93 @@
                     },
                     "403": {
                         "description": "Você não tem permissão para realizar esta ação"
+                    },
+                    "404": {
+                        "description": "Postagem inexistente"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/posts/{id}/edit": {
+            "put": {
+                "summary": "Rota para editar postagem",
+                "description": "Rota para editar postagem",
+                "tags": ["Posts"],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "security": [ {"bearerAuth": []}],
+                "requestBody": {
+                    "content": {
+                        "application/json":{
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "body": {
+                                        "type": "string"
+                                    },
+                                    "cover": {
+                                        "type": "string"
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "tags": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "schedule": {
+                                        "type": "object",
+                                        "properties": {
+                                            "released": {
+                                                "type": "boolean"
+                                            },
+                                            "immediately": {
+                                                "type": "boolean"
+                                            },
+                                            "date": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "title": "BlablaBla postagem",
+                                    "slug": "blablabla-postagem",
+                                    "body": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?",
+                                    "tags": ["Testing", "JS", "ReactJs"]
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Postagem editada com sucesso"
+                    },
+                    "401": {
+                        "description": "Todos campos estão vazios"
+                    },
+                    "406": {
+                        "description": "Você não pode realizar esta operação"
+                    },
+                    "417": {
+                        "description": "Nenhum alteração foi realizada"
                     },
                     "404": {
                         "description": "Postagem inexistente"

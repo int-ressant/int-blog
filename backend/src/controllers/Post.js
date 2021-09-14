@@ -257,3 +257,61 @@ module.exports.adminActions = async (req, res, next) => {
         next(error);
     }
 }
+
+module.exports.edit = async (req, res, next) => {
+    try{
+        const { id } = req.params;
+        let { title, slug, cover, body, tags } = req.body;
+
+        //check if the post exists
+        const _post = await Post.findOne({_id: id});
+        if(!_post) fireError({message: "Postagem inexistente", status: 404});
+
+        if(!title && !slug && !cover && !body && !tags) fireError({message: "Todos campos estão vazios", status: 401 });
+
+        if(tags && tags.length == 0) fireError({message: "Escolha uma no mínimo tag"});
+
+        if(_post.author != req.user.id) fireError({message: "Você não pode realizar esta operação", status: 406});
+
+        title = title || _post.title;
+        slug = slug || _post.slug;
+        cover = cover || _post.cover;
+        body = body || _post.body;
+        tags = tags || _post.tags;
+
+        //check if any edits were made
+        if(_post.title == title && _post.slug == slug && _post.cover == cover && _post.body == body && _post.tags == tags){
+            fireError({message: "Nenhum alteração foi realizada", status: 417});
+        }
+
+
+        const editedPost = await Post.findOneAndUpdate({_id: id}, {
+            $set: {title: title, slug: slug, cover: cover, body: body, tags: tags}
+        }, {
+            new: true,
+            useFindAndModify: false
+        });
+        if(editedPost){
+            tags.map(async (tag) => {
+                let exists = await Tag.exists({name: tag, slug: tag.toLowerCase()});
+                if(!exists){
+                    await Tag.create({
+                        name: tag,
+                        slug: tag.toLowerCase(),
+                        "createdBy.user": req.user.id,
+                        "createdBy.username": req.user.username
+                    })
+                }  
+            })
+        }
+        return res.status(201).json({
+            message: "Postagem editada com sucesso", 
+            data: editedPost
+        })
+
+
+    }catch(error){
+        if (!error.statusCode) error.statusCode = 500;
+        next(error)
+    }
+}
