@@ -30,11 +30,14 @@ function Login() {
   const [data,setData]=useState({});
   const toast=useToast();
   const router=useRouter();
-  const {handleLogin}=useAuth();
+  const {handleLogin, handleGuestLogin}=useAuth();
 
   
 
-
+  const handleLoginAsGuest=()=>{
+    handleGuestLogin();
+    router.push('/');
+  }
 
 
 
@@ -58,7 +61,7 @@ function Login() {
 
       
 
-      Cookies.set('Int.token',res.data.data.token);
+      Cookies.set('int@token',res.data.data.token);
       handleLogin(newData);
       setLoading(false);
 
@@ -193,7 +196,8 @@ function Login() {
               alignItems="center"
             >
               <MainLink href="/auth/register" txt='Criar uma conta' /> 
-              <MainLink txt="Entrar como convidado" mt="5" href="/auth/register"/>
+              {/* <MainLink action={handleGuestLogin} href='/' txt="Entrar como convidado" mt="5"/> */}
+              <Button variant='link' mt='5' onClick={handleLoginAsGuest} >Entrar como Guest</Button>
                
             </Flex>
           </Flex>

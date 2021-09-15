@@ -17,9 +17,9 @@ export function AuthProvider({children}){
             // setIsLogged(true);
         }else if(!isLogged && userData.id ){
             
-            Cookies.set('username',String(userData.username));
-            Cookies.set('type',String(userData.type));
-            Cookies.set('id',String(userData.id));
+            Cookies.set('int@username',String(userData.username));
+            Cookies.set('int@type',String(userData.type));
+            Cookies.set('int@id',String(userData.id));
             
         }
 
@@ -31,12 +31,20 @@ export function AuthProvider({children}){
         setIsLogged(true);
     }
 
+    const handleGuestLogin=()=>{
+        setUserData(guest);
+    }
+
     const handleUserData=(data)=>{
         setUserData(data);
     }
 
     const clearUserData=()=>{
         setUserData([]);
+        Cookies.remove('int@username');
+        Cookies.remove('int@type');
+        Cookies.remove('int@token');
+        Cookies.remove('int@id');
     }
 
     const handleLogout=()=>{
@@ -46,7 +54,7 @@ export function AuthProvider({children}){
 
     
 
-    return <AuthContext.Provider value={{isLogged,setIsLogged, handleLogin,handleLogout, handleUserData,clearUserData,userData,setUserData}}>
+    return <AuthContext.Provider value={{isLogged,setIsLogged, handleLogin,handleLogout, handleUserData,clearUserData,userData,setUserData,handleGuestLogin}}>
 {children}
     </AuthContext.Provider>
 
@@ -54,7 +62,7 @@ export function AuthProvider({children}){
 
 export function useAuth () {
     const context=useContext(AuthContext);
-    const {isLogged,setIsLogged, handleLogout, handleLogin,handleUserData,clearUserData,userData,setUserData}=context;
+    const {isLogged,setIsLogged, handleLogout, handleLogin,handleUserData,clearUserData,userData,setUserData,handleGuestLogin}=context;
 
-    return {isLogged,setIsLogged, handleLogout, handleLogin,handleUserData,clearUserData,userData,setUserData}
+    return {isLogged,setIsLogged, handleLogout, handleLogin,handleUserData,clearUserData,userData,setUserData,handleGuestLogin}
 }

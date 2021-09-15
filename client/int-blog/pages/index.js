@@ -9,17 +9,72 @@ import {
   Tabs,
   Tag,
   Text,
+  useToast,
+
 } from "@chakra-ui/react";
+import Cookies from "js-cookie";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import MainLink from "../components/mainLink";
 import ShortenArticle from "../components/shortenArticle";
+import { api } from "../lib/api";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
-  const handlePublish = () => {router.push('/post/create')};
-
+  
+  const [post,setPost]=useState([]);
   const router=useRouter();
+  const toast=useToast();
+
+  const getPosts=async()=>{
+    api.get('/posts').then((res)=>{
+      console.log(res.data);
+      setPost(res.data);
+
+    }).catch((err)=>{
+      console.log(err);
+      toast({
+        title:'Erro ao carregar posts, tente novamente',
+        description:err.message,
+        status:'error'
+      })
+    })
+  }
+
+  const getPostByUser=async()=>{
+
+    api.get('/posts/all').then((res)=>{
+      console.log(res.data);
+      setPost(res.data);
+      
+    }).catch((err)=>{
+      console.log(err);
+      toast({
+        title:'Erro ao carregar posts, tente novamente',
+        description:err.message,
+        status:'error'
+      })
+    })
+  }
+
+  useEffect(()=>{
+
+    if(Cookies.get('type')==='Guest'){
+      toast({
+        position: 'top',
+        title:'Logado como visitante',
+        status:'warning',
+      })
+      getPosts();
+    }
+    if(Cookies.get('type')==='Regular'){
+      getPostByUser()
+    }
+
+  },[])
+
+  const handlePublish = () => {router.push('/post/create')};
 
   const Clickables = ({ txt }) => {
     return (
@@ -195,7 +250,7 @@ export default function Home() {
 }
 
 
-<Flex
+{/* <Flex
                           borderRadius="10"
                           bg="gray.100"
                           w="100%"
@@ -239,4 +294,4 @@ export default function Home() {
                                </Flex> 
                            
                           </Flex>
-                        </Flex>
+                        </Flex> */}
