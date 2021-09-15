@@ -15,7 +15,7 @@ import {
 import Cookies from "js-cookie";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import MainLink from "../components/mainLink";
 import ShortenArticle from "../components/shortenArticle";
 import { useAuth } from "../contexts/authContext";
@@ -25,6 +25,27 @@ import styles from "../styles/Home.module.css";
 export default function Home() {
   
   const [posts,setPosts]=useState([]);
+  const [page,setPage]=useState(1);
+  const [hasMore,setHasMore]=useState(false);
+  const [loading,setLoading]=useState(false);
+
+  const observer=useRef();
+
+  const lastPostElementRef=useCallback(
+    
+    (node)=>{
+      console.log(node);
+      if (loading) return;
+      if(observer.current) observer.current.disconnect();
+      observer.current= new IntersectionObserver ((entries)=>{
+        if(entries[0].isIntersecting && hasMore){
+          setPage((prev)=>prev+1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    }
+  )
+
   const router=useRouter();
   const toast=useToast();
 
@@ -34,7 +55,8 @@ export default function Home() {
     api.get('/posts').then((res)=>{
       console.log(res.data);
       console.log(res.data.data[0].title);
-      setPosts(res.data.data);
+      setPosts(prevPosts=> [...prevPosts,...res.data.data] );
+      setHasMore(res.data.currentPage ===res.data.total);
 
     }).catch((err)=>{
       console.log(err);
@@ -63,6 +85,7 @@ export default function Home() {
   }
 
   useEffect(()=>{
+    setLoading(true);
 
     if(userData.type==='Guest'){
       toast({
@@ -213,11 +236,16 @@ export default function Home() {
                     <TabPanels>
                       <TabPanel align="start" w="50vw">
                         
-                        {posts.map((item)=>{
+                        {posts.map((item,index)=>{
+                          const isLastElement=posts.length===index+1;
+
                           return(
+                            // isLastElement ? (<div ref={lastPostElementRef} key={index}>{item.title}</div>) :
+                            isLastElement ? (<ShortenArticle ref={lastPostElementRef} description={item.description} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />) :
                           <ShortenArticle description={item.description} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />
                         )
                         })}
+                        <div>{loading && 'Loading...'}</div>
                         {/* <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
                         <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
                         <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
