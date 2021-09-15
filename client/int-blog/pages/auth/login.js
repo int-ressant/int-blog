@@ -215,8 +215,8 @@ function Login() {
 export default Login;
 
 
-export const getServerSideProps= async (ctx) => {
-  const { type, id, username, token} = ctx.req.cookies;
+// export const getServerSideProps= async (ctx) => {
+//   const { type, id, username, token} = ctx.req.cookies;
 
-  return {}
-}
+//   return {}
+// }

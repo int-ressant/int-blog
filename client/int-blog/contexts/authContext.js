@@ -15,10 +15,12 @@ export function AuthProvider({children}){
     useEffect(()=>{
         if(userData.type==='Guest'){
             // setIsLogged(true);
-        }else if(!isLogged && !userData.id ){
+        }else if(!isLogged && userData.id ){
+            
             Cookies.set('username',String(userData.username));
             Cookies.set('type',String(userData.type));
             Cookies.set('id',String(userData.id));
+            
         }
 
     },[userData])
