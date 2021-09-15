@@ -7,6 +7,7 @@ import router, { useRouter } from "next/router";
 import AuthHeader from "../components/authHeader";
 import { useEffect, useState } from "react";
 import MainNavBar from "../components/mainNavBar";
+import { AuthProvider } from "../contexts/authContext";
 
 function MyApp({ Component, pageProps }) {
   const routeHistory = useRouter();
@@ -17,6 +18,7 @@ function MyApp({ Component, pageProps }) {
   }, [routeHistory]);
 
   return (
+    <AuthProvider>
     <ChakraProvider theme={theme}>
       {/* {console.log(routeHistory.pathname)} */}
 
@@ -25,6 +27,7 @@ function MyApp({ Component, pageProps }) {
       {route==='/' && <MainNavBar/>}
       <Component {...pageProps} />
     </ChakraProvider>
+    </AuthProvider>
   );
 }
 

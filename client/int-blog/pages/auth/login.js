@@ -18,14 +18,19 @@ import MainLink from "../../components/mainLink";
 import { api } from "../../lib/api";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import authContext, { useAuth } from "../../contexts/authContext";
+import Cookies from "js-cookie";
+import {AuthProvider} from '../../contexts/authContext'
 
 function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const [data,setData]=useState({});
   const toast=useToast();
   const router=useRouter();
+  const {handleLogin}=useAuth();
 
   
 
@@ -36,13 +41,26 @@ function Login() {
   const handleSubmit = async (e) => {
     
     e.preventDefault();
-
+    setLoading(true);
 
 
     console.log("clicked");
   
     api.post('/users/signin', email.toLowerCase().includes('@') ? {email:email,password:password} :{username:email,password:password}).then((res)=>{
-      console.log(res.message);
+      console.log(res.data.message);
+      console.log(JSON.stringify(res.data.data.id));
+      let newData={
+        id:String(res.data.data.id),
+        type:res.data.data.user.type,
+        email:res.data.data.user.email,
+        username:res.data.data.user.username};
+
+      
+
+      Cookies.set('token',res.data.token);
+      handleLogin(newData);
+      setLoading(false);
+
       toast({
         title:'Logando...',
         description:res.message,
@@ -53,10 +71,11 @@ function Login() {
       router.push('/');
 
     }).catch((error)=>{
-      console.log(error.response.data);
+      console.log(error);
+      setLoading(false);
       toast({
         title:'Erro ao logar!',
-        description:error.response.data.message,
+        description:error ? error.message : error.response.data.message ,
         status:'error',
         duration:5000,
         isClosable:true,
@@ -76,6 +95,8 @@ function Login() {
   }
 
   return (
+    <>
+    {/* <AuthProvider> */}
     <div>
       {/* <AuthHeader /> */}
       <Box className={styles.blob}>
@@ -157,7 +178,7 @@ function Login() {
                     <Text>Esquecei a senha</Text>
                     </Link>
                     
-                    <Button type="submit" bgColor="green.light" color="white">
+                    <Button isLoading={loading} type="submit" bgColor="green.light" color="white">
                       Entrar
                     </Button>
                   </Flex>
@@ -185,7 +206,16 @@ function Login() {
         layout="responsive"
       /> */}
     </div>
+    {/* </AuthProvider> */}
+    </>
   );
 }
 
 export default Login;
+
+
+export const getServerSideProps= async (ctx) => {
+  const { level, currentXp, challengesCompleted, name, login, avatar } = ctx.req.cookies;
+
+  return {}
+}
