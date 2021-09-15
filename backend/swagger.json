@@ -1,0 +1,606 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Int-blog backend",
+        "description": "Int-blog backend documentation",
+        "version": "1.0.0"
+    },
+    "basePath": "/",
+    
+
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+
+
+    "paths": {
+        "/api/users/register": {
+            "post": {
+                "summary": "Para novo usuário",
+                "description": "Rota que cria uma nova conta",
+                "tags": ["Users"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "gender": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "name": "test",
+                                    "email": "cafefantasma1@gmail.com",
+                                    "username": "test",
+                                    "gender": "Male",
+                                    "password": "teste1234"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Conta cadastrada com sucesso."
+                    },
+                    "400": {
+                        "description": "Adicione o nome do usuario para continuar. Ou Defina a tua senha para continuar. Ou Adicione o teu email para continuar."
+                    },
+                    "401": {
+                        "description": "Selecione outro email ou nome do usuario diferente."
+                    },
+                    "500": {
+                        "description": "Houve um erro ao criar conta. Tente mais tarde"
+                    }
+                }
+            }
+        },
+        "/api/users/signin": {
+            "post": {
+                "tags": ["Users"],
+                "summary": "Login do usuário",
+                "description": "Rota que tras todas credencias para acesso ao sistema",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "email": "cafefantasma1@gmail.com",
+                                    "password": "teste1234"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login realizado com sucesso."
+                    },
+                    "400": {
+                        "description": "[ 'Adicione o nome do usuario ou email para continuar.', 'Ou Adicione a tua senha para continuar.', 'Ou onta suspensa. Contacte o suporte', 'Ou Digitou login ou uma senha errada', 'Digitou um login ou uma senha errada.' ]"
+                    },
+                    "401": {
+                        "description": "Conta não autenticada. Verifique o teu email."
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/users": {
+            "get": {
+                "security": [ {"bearerAuth": []}],
+                "summary": "Lista usuários ativos",
+                "description": "Rota que pega todos usuários",
+                "tags": ["Users"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "type": "integer"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "type": "integer"
+                    }
+                ], 
+                "responses": {
+                    "200": {
+                        "description": "Sucesso"
+                    },
+                    "401": {
+                        "description": "Usuário não autenticado"
+                    },
+                    "403": {
+                        "description": "Você não tem permissão para realizar esta ação"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/users/{username}": {
+            "get": {
+                "summary": "Rota que pega usuário por username",
+                "description": "Uma string com o nome do usuário",
+                "tags": ["Users"],
+                "parameters": [{
+                    "in": "path",
+                    "name": "username",
+                    "schema":{
+                        "type": "string"
+                    },
+                    "required": true
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso"
+                    },
+                    "404": {
+                        "description": "Usuário inexistente"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+
+        "/api/codes/register": {
+            "post": {
+                "summary": "Rota que registra codigos",
+                "description": "Rota que registra codigos",
+                "tags": ["Codes"],
+                "parameters": [{
+                    "in": "query",
+                    "name": "type",
+                    "type": "string",
+                    "required": true
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json":{
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "email": "cafefantasma1@gmail.com"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Se existir uma conta associada com este email, enviaremos uma mensagem com o código de confirmação"
+                    },
+                    "400": {
+                        "description": "['Adicione o teu email para continuar.', 'Tipo de requisição inválida' ]"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/codes/confirmation": {
+            "post": {
+                "summary": "Rota que confirma codigos",
+                "description": "Rota que confirma codigos",
+                "tags": ["Codes"],
+                "parameters": [{
+                    "in": "query",
+                    "name": "type",
+                    "type": "string",
+                    "required": true
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json":{
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "newPassword": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "code": 1234,
+                                    "email": "cafefantasma1@gmail.com"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Conta verificada com sucesso"
+                    },
+                    "201": {
+                        "description": "Senha atualizada com sucesso"
+                    },
+                    "400": {
+                        "description": "['Insira o teu codigo de confirmação', 'Email inválido', 'Falha na autenticação', ]"
+                    },
+                    "401": {
+                        "description": "['Codigo inválido', 'Digite a nova senha para prosseguir', 'Conta não autenticada. Verifique o teu email', 'Acão invalida']"
+                    },
+                    "404": {
+                        "description": "Codigo de autenticação inexistente"
+                    },
+                    "405": {
+                        "description": "Tipo de requisição inválida"
+                    },
+                    "409": {
+                        "description": "Digite uma senha diferente da atual"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/posts": {
+            "get": {
+                "summary": "Listagem de todos posts.",
+                "description": "Pega todas postagens ativas e que já foram publicadas ",
+                "tags": ["Posts"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "type": "integer"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/posts/all": {
+            "get": {
+                "summary": "Listagem de todos posts.",
+                "description": "Pega todas postagens ativas e que já foram publicadas ",
+                "tags": ["Posts"],
+                "security": [ {"bearerAuth": []}],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "type": "integer"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso"
+                    },
+                    "401": {
+                        "description": "Usuário não autenticado."
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/posts/{slug}/single": {
+            "get": {
+                "summary": "Rota que pega a postagem pelo slug(link)",
+                "description": "Uma string descrevendo o link do post",
+                "tags": ["Posts"],
+                "parameters": [{
+                    "in": "path",
+                    "name": "slug",
+                    "schema":{
+                        "type": "string"
+                    },
+                    "required": true
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Postagem encontrada"
+                    },
+                    "404": {
+                        "description": "Postagem inexistente"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/posts/{slug}/view": {
+            "post": {
+                "summary": "Rota incrementa views para postagem slug(link)",
+                "description": "Depois de um tempo (15 Segundos no mínimo), pode fazer essa requesição  ",
+                "tags": ["Posts"],
+                "parameters": [{
+                    "in": "path",
+                    "name": "slug",
+                    "schema":{
+                        "type": "string"
+                    },
+                    "required": true
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Postagem encontrada"
+                    },
+                    "403": {
+                        "description": "Você não tem permissão para realizar esta ação"
+                    },
+                    "404": {
+                        "description": "Postagem inexistente"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/posts/register": {
+            "post": {
+                "summary": "Criar postagem",
+                "description": "Rota que cria postagem",
+                "tags": ["Posts"],
+                "security": [ {"bearerAuth": []}],
+                "requestBody": {
+                    "content": {
+                        "application/json":{
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "body": {
+                                        "type": "string"
+                                    },
+                                    "cover": {
+                                        "type": "string"
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "tags": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "schedule": {
+                                        "type": "object",
+                                        "properties": {
+                                            "released": {
+                                                "type": "boolean"
+                                            },
+                                            "immediately": {
+                                                "type": "boolean"
+                                            },
+                                            "date": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "title": "BlablaBla postagem",
+                                    "slug": "blablabla-postagem",
+                                    "body": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?",
+                                    "tags": ["Testing", "JS", "ReactJs"]
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "['Postagem adicionada com sucesso', 'Postagem adicionada á lista de aprovação']"
+                    },
+                    "201": {
+                        "description": "Se existir uma conta associada com este email, enviaremos uma mensagem com o código de confirmação"
+                    },
+                    "400": {
+                        "description": "['Adicione o teu email para continuar.', 'Tipo de requisição inválida' ]"
+                    },
+                    "401": {
+                        "description": "['Indique no mínimo uma tag.', 'Indique um titulo para a postagem', 'Indique o link para a postagem', 'Adicione mais conteudo para a postagem', 'Já existe uma postagem com o mesmo título.Escolha outro título', 'Já existe uma postagem com o mesmo link.Escolha outro link', ]"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/posts/admin/{id}/edit": {
+            "put": {
+                "summary": "Rota para aprovar, eliminar, suspender e retirar suspensão da postagem ( para staffs e admin)",
+                "description": "Rota para aprovar, eliminar, suspender e retirar suspensão da postagem ( para staffs e admin)",
+                "tags": ["Posts"],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "action",
+                        "type": "string"
+                    }
+                ],
+                "security": [ {"bearerAuth": []}],
+                "responses": {
+                    "200": {
+                        "description": "['Postagem aprovada com sucesso', 'Postagem removida com sucesso', 'Postagem suspensa com sucesso', 'Suspenção retirada com sucesso']"
+                    },
+                    "401": {
+                        "description": "['Especifique a ação que deseja realizar', 'Ação invalida', ]"
+                    },
+                    "403": {
+                        "description": "Você não tem permissão para realizar esta ação"
+                    },
+                    "404": {
+                        "description": "Postagem inexistente"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/posts/{id}/edit": {
+            "put": {
+                "summary": "Rota para editar postagem",
+                "description": "Rota para editar postagem",
+                "tags": ["Posts"],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "security": [ {"bearerAuth": []}],
+                "requestBody": {
+                    "content": {
+                        "application/json":{
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "body": {
+                                        "type": "string"
+                                    },
+                                    "cover": {
+                                        "type": "string"
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "tags": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "schedule": {
+                                        "type": "object",
+                                        "properties": {
+                                            "released": {
+                                                "type": "boolean"
+                                            },
+                                            "immediately": {
+                                                "type": "boolean"
+                                            },
+                                            "date": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "title": "BlablaBla postagem",
+                                    "slug": "blablabla-postagem",
+                                    "body": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?",
+                                    "tags": ["Testing", "JS", "ReactJs"]
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Postagem editada com sucesso"
+                    },
+                    "401": {
+                        "description": "Todos campos estão vazios"
+                    },
+                    "406": {
+                        "description": "Você não pode realizar esta operação"
+                    },
+                    "417": {
+                        "description": "Nenhum alteração foi realizada"
+                    },
+                    "404": {
+                        "description": "Postagem inexistente"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+        
+    }
+}

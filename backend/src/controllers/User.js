@@ -5,6 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const jwt = require('jsonwebtoken');
 const { sendEmail } = require('../config/email')
 const defaultPaginationSize = parseInt(process.env.DEFAULT_PAGINATION_SIZE);
+const { fireError } = require('../config/error');
 
 module.exports.createUser = async (req, res, next ) => {
     try {
@@ -96,7 +97,7 @@ module.exports.signin = async (req, res, next ) => {
         const _user = await User.findOne({ $or: [ { email: email}, { username: username } ]});
         if(!_user.verified){
             let error = new Error("Conta não autenticada. Verifique o teu email");
-            error.statusCode = 400;
+            error.statusCode = 401;
             throw error;
         }
 
@@ -133,7 +134,7 @@ module.exports.signin = async (req, res, next ) => {
             }).select('-password');
             const token = await jwt.sign({id: _user.id }, JWT_SECRET, { expiresIn: '7d'});
 
-            return res.status(201).json({
+            return res.status(200).json({
                 message: "Login realizado com sucesso",
                 data: {
                     id: _user.id,
@@ -153,9 +154,10 @@ module.exports.signin = async (req, res, next ) => {
     }
 }
 
-module.exports.getUsers = async (req, res, nex) => {
+module.exports.getUsers = async (req, res, next) => {
     try{
 
+        if (req.user.type != 'Staff' && req.user.type != 'Admin') fireError({message: "Você não tem permissão para realizar esta ação", status: 403});
         //pagination
         const _page = parseInt(req.query.page) || 1;
         const _offset = parseInt(req.query.offset) || defaultPaginationSize;
@@ -184,15 +186,17 @@ module.exports.getUsers = async (req, res, nex) => {
     }
 }
 
-module.exports.getUserByUsernane = async (req, res, nex) => {
+module.exports.getUserByUsernane = async (req, res, next) => {
     try{
         const { username } = req.params;
 
-        const users = await User.findOne({username: username}).select("-password");
+        const user = await User.findOne({username: username}).select("-password");
+
+        if(!user) fireError({message: "Usuário inexistente", status: 404})
 
         return res.status(200).json({
             message: "Sucesso",
-            data: users
+            data: user
         })
 
     }catch(error){
