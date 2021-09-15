@@ -48,16 +48,17 @@ function Login() {
   
     api.post('/users/signin', email.toLowerCase().includes('@') ? {email:email,password:password} :{username:email,password:password}).then((res)=>{
       console.log(res.data.message);
-      console.log(JSON.stringify(res.data.data.id));
+      console.log(JSON.stringify(res.data.data.token));
       let newData={
         id:String(res.data.data.id),
         type:res.data.data.user.type,
         email:res.data.data.user.email,
-        username:res.data.data.user.username};
+        username:res.data.data.user.username
+      };
 
       
 
-      Cookies.set('token',res.data.token);
+      Cookies.set('Int.token',res.data.data.token);
       handleLogin(newData);
       setLoading(false);
 
@@ -215,7 +216,7 @@ export default Login;
 
 
 export const getServerSideProps= async (ctx) => {
-  const { level, currentXp, challengesCompleted, name, login, avatar } = ctx.req.cookies;
+  const { type, id, username, token} = ctx.req.cookies;
 
   return {}
 }
