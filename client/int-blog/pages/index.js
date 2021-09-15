@@ -24,7 +24,7 @@ import styles from "../styles/Home.module.css";
 
 export default function Home() {
   
-  const [post,setPost]=useState([]);
+  const [posts,setPosts]=useState([]);
   const router=useRouter();
   const toast=useToast();
 
@@ -33,7 +33,8 @@ export default function Home() {
   const getPosts=async()=>{
     api.get('/posts').then((res)=>{
       console.log(res.data);
-      setPost(res.data);
+      console.log(res.data.data[0].title);
+      setPosts(res.data.data);
 
     }).catch((err)=>{
       console.log(err);
@@ -49,7 +50,7 @@ export default function Home() {
 
     api.get('/posts/all').then((res)=>{
       console.log(res.data);
-      setPost(res.data);
+      setPosts(res.data);
       
     }).catch((err)=>{
       console.log(err);
@@ -212,10 +213,15 @@ export default function Home() {
                     <TabPanels>
                       <TabPanel align="start" w="50vw">
                         
+                        {posts.map((item)=>{
+                          return(
+                          <ShortenArticle description={item.description} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />
+                        )
+                        })}
+                        {/* <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
                         <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
                         <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
-                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
-                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
+                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' /> */}
 
                       </TabPanel>
                       <TabPanel align="start" w="50vw">
