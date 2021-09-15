@@ -31,7 +31,7 @@ export function AuthProvider({children}){
         setIsLogged(true);
     }
 
-    const handleGuestLogin=()=>{
+    function handleGuestLogin(){
         setUserData(guest);
     }
 
@@ -39,7 +39,7 @@ export function AuthProvider({children}){
         setUserData(data);
     }
 
-    const clearUserData=()=>{
+    function clearUserData(){
         setUserData([]);
         Cookies.remove('int@username');
         Cookies.remove('int@type');

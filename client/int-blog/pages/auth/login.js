@@ -30,12 +30,18 @@ function Login() {
   const [data,setData]=useState({});
   const toast=useToast();
   const router=useRouter();
-  const {handleLogin, handleGuestLogin}=useAuth();
+  const {handleLogin, handleGuestLogin, clearUserData, userData}=useAuth();
 
   
 
   const handleLoginAsGuest=()=>{
-    handleGuestLogin();
+      clearUserData();
+     Cookies.remove('int@username',{path:'/',domain:'localhost'});
+        Cookies.remove('int@type',{path:'/',domain:'localhost'});
+        Cookies.remove('int@token',{path:'/',domain:'localhost'});
+        Cookies.remove('int@id',{path:'/',domain:'localhost'});
+     handleGuestLogin();
+    console.log(userData);
     router.push('/');
   }
 

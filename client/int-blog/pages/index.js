@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import MainLink from "../components/mainLink";
 import ShortenArticle from "../components/shortenArticle";
+import { useAuth } from "../contexts/authContext";
 import { api } from "../lib/api";
 import styles from "../styles/Home.module.css";
 
@@ -26,6 +27,8 @@ export default function Home() {
   const [post,setPost]=useState([]);
   const router=useRouter();
   const toast=useToast();
+
+  const {userData}=useAuth();
 
   const getPosts=async()=>{
     api.get('/posts').then((res)=>{
@@ -60,7 +63,7 @@ export default function Home() {
 
   useEffect(()=>{
 
-    if(Cookies.get('type')==='Guest'){
+    if(userData.type==='Guest'){
       toast({
         position: 'top',
         title:'Logado como visitante',
@@ -68,7 +71,7 @@ export default function Home() {
       })
       getPosts();
     }
-    if(Cookies.get('type')==='Regular'){
+    if(userData.type==='Regular'){
       getPostByUser()
     }
 
