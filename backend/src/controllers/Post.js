@@ -22,8 +22,8 @@ module.exports.create = async (req, res, next) => {
 
         if (exists && slug == exists.slug) fireError({ message: "Já existe uma postagem com o mesmo link.Escolha outro link", status: 401 })
 
-        let approved = false;
-        if (req.user.type == 'Staff' || req.user.type == 'Admin') approved = true;
+        let approved = true;
+        //if (req.user.type == 'Staff' || req.user.type == 'Admin') approved = true;
         
         if(!schedule) schedule = {
             released: true,
