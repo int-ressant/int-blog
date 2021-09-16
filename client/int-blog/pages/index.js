@@ -9,17 +9,103 @@ import {
   Tabs,
   Tag,
   Text,
+  useToast,
+
 } from "@chakra-ui/react";
+import Cookies from "js-cookie";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import MainLink from "../components/mainLink";
 import ShortenArticle from "../components/shortenArticle";
+import { useAuth } from "../contexts/authContext";
+import { api } from "../lib/api";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
-  const handlePublish = () => {router.push('/post/create')};
+  
+  const [posts,setPosts]=useState([]);
+  const [page,setPage]=useState(1);
+  const [hasMore,setHasMore]=useState(false);
+  const [loading,setLoading]=useState(false);
+
+  const observer=useRef();
+
+  const lastPostElementRef=useCallback(
+    
+    (node)=>{
+      console.log(node);
+      if (loading) return;
+      if(observer.current) observer.current.disconnect();
+      observer.current= new IntersectionObserver ((entries)=>{
+        if(entries[0].isIntersecting && hasMore){
+          setPage((prev)=>prev+1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    }
+  )
 
   const router=useRouter();
+  const toast=useToast();
+
+  const {userData}=useAuth();
+
+  const getPosts=async()=>{
+    api.get(`/posts?page=${page}`).then((res)=>{
+      console.log(res.data);
+      console.log(res.data.data[0].title);
+      setPosts(prevPosts=> [...prevPosts,...res.data.data] );
+      setHasMore(res.data.currentPage ===res.data.total);
+
+    }).catch((err)=>{
+      console.log(err);
+      toast({
+        title:'Erro ao carregar posts, tente novamente',
+        description:err.message,
+        status:'error'
+      })
+    })
+  }
+
+  const getPostByUser=async()=>{
+
+    api.get('/posts/all').then((res)=>{
+      console.log(res.data);
+      setPosts(res.data);
+      
+    }).catch((err)=>{
+      console.log(err);
+      toast({
+        title:'Erro ao carregar posts, tente novamente',
+        description:err.message,
+        status:'error'
+      })
+    })
+  }
+
+  useEffect(()=>{
+    setLoading(true);
+
+    if(userData.type==='Guest'){
+      toast({
+        position: 'top',
+        title:'Logado como visitante',
+        status:'warning',
+      })
+      getPosts();
+    }
+    if(userData.type==='Regular'){
+      getPostByUser()
+    }
+
+  },[])
+
+  useEffect(()=>{
+    console.log(page);
+  },[page])
+
+  const handlePublish = () => {router.push('/post/create')};
 
   const Clickables = ({ txt }) => {
     return (
@@ -154,10 +240,22 @@ export default function Home() {
                     <TabPanels>
                       <TabPanel align="start" w="50vw">
                         
+                        {posts.map((item,index)=>{
+                          const isLastElement=posts.length===index+1;
+
+                          return(
+                            // isLastElement ? (<div ref={lastPostElementRef} key={index}>{item.title}</div>) :
+                            isLastElement ? (<ShortenArticle myref={lastPostElementRef} description={item.description} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />) :
+                          <ShortenArticle description={item.slug} title={item.title}  datetime={item.createdAt}
+                           username='author' comments='50' views={item.views.count} tag1={item.tags[0]} tag2={item.tags[1]} tag3={item.tags[2]}
+                           />
+                        )
+                        })}
+                        <div>{loading && 'Loading...'}</div>
+                        {/* <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
                         <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
                         <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
-                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
-                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
+                        <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' /> */}
 
                       </TabPanel>
                       <TabPanel align="start" w="50vw">
@@ -195,7 +293,7 @@ export default function Home() {
 }
 
 
-<Flex
+{/* <Flex
                           borderRadius="10"
                           bg="gray.100"
                           w="100%"
@@ -239,4 +337,4 @@ export default function Home() {
                                </Flex> 
                            
                           </Flex>
-                        </Flex>
+                        </Flex> */}

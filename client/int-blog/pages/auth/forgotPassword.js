@@ -12,6 +12,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import MainForm from "../../components/mainForm";
 
@@ -28,6 +29,7 @@ export default function ForgotPassword() {
   const [otp, setOtp] = useState("");
 
   const toast=useToast();
+  const router=useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,10 +100,16 @@ export default function ForgotPassword() {
     e.preventDefault();
     setFecthing(true);
 
-    api.post('/codes/confirmation?type=forgotPassword',{email,code:otp, password:password}).then((res)=>{
+    api.post('/codes/confirmation?type=forgotPassword',{email,code:otp, newPassword:password}).then((res)=>{
       console.log(res.data);
+      toast({
+        title:res.data.message,
+        status:'success'
+      });
       setFecthing(false);
       setNext("step3");
+      router.replace('/auth/login');
+      
 
     }).catch((err)=>{
       console.log(err.response.data.message);
@@ -163,7 +171,7 @@ e.preventDefault();
             Bem vindo a maior comunidade Mocambicana de devs
           </Text>
           <Text mt="5" color="blue.dark">
-            { next==='none' ? 'Recuperar senha' : next==='step1'? 'Insira o codigo otp': 'Digite nova password'}
+            { next==='none' ? 'Recuperar senha' : next==='step1'? 'Insira o codigo otp': next==='step2' ? 'Digite nova password' : 'redirecionando...'}
           </Text>
 
           <Flex mt="5" w="100%" justifyContent="center">
@@ -188,7 +196,7 @@ e.preventDefault();
               />
               <Text fontSize='small' mt='8' as='button' type='submit' onClick={handleResend} >Reenviar código</Text>
               </Flex>
-            ) : (
+            ) : next==='step2' ? (
               <MainForm pass value={password}
              
               setValue={setPassword}
@@ -196,7 +204,16 @@ e.preventDefault();
               value2={cPassword}
               action={handleSubmitPass}
               fetching={fetching} />
-            )}
+            )
+            :
+            <Flex>
+              <Box p='5' backgroundColor='green.100' >
+                <Text>Senha redefinida com sucesso</Text>
+                {/* <Text>redirecionando...</Text> */}
+              </Box>
+            </Flex>
+          
+          }
           </Flex>
           <Flex
             mt="20"

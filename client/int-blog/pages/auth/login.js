@@ -18,31 +18,59 @@ import MainLink from "../../components/mainLink";
 import { api } from "../../lib/api";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import authContext, { useAuth } from "../../contexts/authContext";
+import Cookies from "js-cookie";
+import {AuthProvider} from '../../contexts/authContext'
 
 function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const [data,setData]=useState({});
   const toast=useToast();
   const router=useRouter();
+  const {handleLogin, handleGuestLogin, clearUserData, userData}=useAuth();
 
   
 
-
+  const handleLoginAsGuest=()=>{
+      clearUserData();
+     Cookies.remove('int@username',{path:'/',domain:'localhost'});
+        Cookies.remove('int@type',{path:'/',domain:'localhost'});
+        Cookies.remove('int@token',{path:'/',domain:'localhost'});
+        Cookies.remove('int@id',{path:'/',domain:'localhost'});
+     handleGuestLogin();
+    console.log(userData);
+    router.push('/');
+  }
 
 
 
   const handleSubmit = async (e) => {
     
     e.preventDefault();
-
+    setLoading(true);
 
 
     console.log("clicked");
   
     api.post('/users/signin', email.toLowerCase().includes('@') ? {email:email,password:password} :{username:email,password:password}).then((res)=>{
-      console.log(res.message);
+      console.log(res.data.message);
+      console.log(JSON.stringify(res.data.data.token));
+      let newData={
+        id:String(res.data.data.id),
+        type:res.data.data.user.type,
+        email:res.data.data.user.email,
+        username:res.data.data.user.username
+      };
+
+      
+
+      Cookies.set('int@token',res.data.data.token);
+      handleLogin(newData);
+      setLoading(false);
+
       toast({
         title:'Logando...',
         description:res.message,
@@ -53,10 +81,11 @@ function Login() {
       router.push('/');
 
     }).catch((error)=>{
-      console.log(error.response.data);
+      console.log(error);
+      setLoading(false);
       toast({
         title:'Erro ao logar!',
-        description:error.response.data.message,
+        description:error ? error.message : error.response.data.message ,
         status:'error',
         duration:5000,
         isClosable:true,
@@ -76,6 +105,8 @@ function Login() {
   }
 
   return (
+    <>
+    {/* <AuthProvider> */}
     <div>
       {/* <AuthHeader /> */}
       <Box className={styles.blob}>
@@ -157,7 +188,7 @@ function Login() {
                     <Text>Esquecei a senha</Text>
                     </Link>
                     
-                    <Button type="submit" bgColor="green.light" color="white">
+                    <Button isLoading={loading} type="submit" bgColor="green.light" color="white">
                       Entrar
                     </Button>
                   </Flex>
@@ -171,7 +202,8 @@ function Login() {
               alignItems="center"
             >
               <MainLink href="/auth/register" txt='Criar uma conta' /> 
-              <MainLink txt="Entrar como convidado" mt="5" href="/auth/register"/>
+              {/* <MainLink action={handleGuestLogin} href='/' txt="Entrar como convidado" mt="5"/> */}
+              <Button variant='link' mt='5' onClick={handleLoginAsGuest} >Entrar como Guest</Button>
                
             </Flex>
           </Flex>
@@ -185,7 +217,16 @@ function Login() {
         layout="responsive"
       /> */}
     </div>
+    {/* </AuthProvider> */}
+    </>
   );
 }
 
 export default Login;
+
+
+// export const getServerSideProps= async (ctx) => {
+//   const { type, id, username, token} = ctx.req.cookies;
+
+//   return {}
+// }
