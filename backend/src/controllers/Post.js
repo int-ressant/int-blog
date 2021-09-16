@@ -90,6 +90,7 @@ module.exports.getActivePosts = async (req, res, next) => {
         const _page = parseInt(req.query.page) || 1;
         const _offset = parseInt(req.query.offset) || defaultPaginationSize;
         const _query = {"schedule.released": true, approved: true, suspended: false, deleted: false};
+        //const _query = {"schedule.released": true, suspended: false, deleted: false};
         const posts = await Post.find(_query).skip((_page - 1) * _offset).limit(_offset).sort({ createdAt: -1}).populate("tags.id", "id name slug")
         
         const _total = await Post.countDocuments(_query);
