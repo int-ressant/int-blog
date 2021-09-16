@@ -4,8 +4,11 @@ const app = express();
 const cors = require('cors');
 const swaggerUI = require('swagger-ui-express');
 const swaggerDocumment = require('../swagger.json');
+const passport = require('passport');
+const session = require('express-session');
 
 require('dotenv').config()
+require('./config/passport')(passport)
 
 //routes import
 const UserRoutes = require('./routes/user');
@@ -17,6 +20,17 @@ const CodeRoutes = require('./routes/code');
 //setup app JSON
 app.use(express.json());
 app.use(cors());
+
+//sesstion setup
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}))
+
+//passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 //section for routes
 app.use('/api', CodeRoutes);
