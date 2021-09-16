@@ -52,7 +52,7 @@ export default function Home() {
   const {userData}=useAuth();
 
   const getPosts=async()=>{
-    api.get('/posts').then((res)=>{
+    api.get(`/posts?page=${page}`).then((res)=>{
       console.log(res.data);
       console.log(res.data.data[0].title);
       setPosts(prevPosts=> [...prevPosts,...res.data.data] );
@@ -242,7 +242,7 @@ export default function Home() {
                           return(
                             // isLastElement ? (<div ref={lastPostElementRef} key={index}>{item.title}</div>) :
                             isLastElement ? (<ShortenArticle ref={lastPostElementRef} description={item.description} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />) :
-                          <ShortenArticle description={item.description} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />
+                          <ShortenArticle description={item.slug} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />
                         )
                         })}
                         <div>{loading && 'Loading...'}</div>
