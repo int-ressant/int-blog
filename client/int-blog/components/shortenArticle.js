@@ -2,9 +2,9 @@ import { Box, Flex, Tag, Text } from '@chakra-ui/react'
 import React from 'react'
 
 
-export default function ShortenArticle({title,description,datetime,tag1,tag2,tag3,username,views,comments,ref}) {
+export default function ShortenArticle({title,description,datetime,tag1,tag2,tag3,username,views,comments,myref}) {
     return (
-      <div ref={ref}>
+      <div ref={myref}>
         <Flex
         
         borderRadius="10"
