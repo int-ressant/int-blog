@@ -242,7 +242,9 @@ export default function Home() {
                           return(
                             // isLastElement ? (<div ref={lastPostElementRef} key={index}>{item.title}</div>) :
                             isLastElement ? (<ShortenArticle ref={lastPostElementRef} description={item.description} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />) :
-                          <ShortenArticle description={item.slug} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />
+                          <ShortenArticle description={item.slug} title={item.title}  datetime={item.createdAt}
+                           username='author' comments='50' views={item.views.count} tag1={item.tags[0]} tag2={item.tags[1]} tag3={item.tags[2]}
+                           />
                         )
                         })}
                         <div>{loading && 'Loading...'}</div>
