@@ -95,6 +95,13 @@ module.exports.signin = async (req, res, next ) => {
         }
 
         const _user = await User.findOne({ $or: [ { email: email}, { username: username } ]});
+        
+        if(!_user){
+            let error = new Error("Digitou um login ou uma senha errada.");
+            error.statusCode = 400;
+            throw error;
+        }
+
         if(!_user.verified){
             let error = new Error("Conta não autenticada. Verifique o teu email");
             error.statusCode = 401;
@@ -106,7 +113,8 @@ module.exports.signin = async (req, res, next ) => {
             error.statusCode = 400;
             throw error;
         }
-        
+        if(_user.googleId) fireError({message: "Faça o login com o google para prosseguir", status: 401});
+
         if(_user){
 
             //check if password match
@@ -142,10 +150,6 @@ module.exports.signin = async (req, res, next ) => {
                     user: updatedUser
                 }
             })
-        }else{
-            let error = new Error("Digitou um login ou uma senha errada.");
-            error.statusCode = 400;
-            throw error;
         }
         
     } catch (error) {
