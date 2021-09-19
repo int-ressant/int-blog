@@ -156,6 +156,7 @@ module.exports = (passport) => {
             profilePicture: profile.photos[0].value,
             verified: true
         };
+        
         const user = await User.findOne({facebookId: userObj.facebookId}).select('-password');
         
         /**
