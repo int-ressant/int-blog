@@ -1,38 +1,8 @@
 const Tag = require('../models/tag');
+const defaultPaginationSize = parseInt(process.env.DEFAULT_PAGINATION_SIZE);
 const { fireError } = require('../config/error')
 
-module.exports.createTag = async (req, res, next) => {
-    try {
-        const { name, slug } = req.body;
-        if(!name) fireError({status: 401, message: "Insira o nome da tag"});
-        if(!slug) fireError({status: 401, message: "Insira o link da tag"});
-        const exists = await Tag.exists({ $or: [ { name: name}, { slug: slug } ]})
-        if(exists){
-            return res.status(400).json({
-                message: "Já existe uma tag com este nome ou este link",
-                data: []
-            })
-        }
-        const createdTag = await Tag.create({
-            slug: slug.toLowerCase(),
-            name: name,
-            createdBy: {
-                user: req.user.id,
-                username: req.user.username 
-            }
-        })
-        if(createdTag){
-            return res.status(201).json({
-                message: "Tag criada com sucesso",
-                data: createdTag
-            })
-        }
-  
-    } catch (error) {
-        if(!error.statusCode) error.statusCode = 500;
-        next(error);
-    }
-}
+
 module.exports.updateTag = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -71,9 +41,24 @@ module.exports.updateTag = async (req, res, next) => {
 
 module.exports.getTags = async (req, res, next) => {
     try {
-        const tags = await Tag.find({}, { name: 1, slug: 1 });
+        //pagination
+        const _page = parseInt(req.query.page) || 1;
+        const _offset = parseInt(req.query.offset) || defaultPaginationSize;
+        const _query = {};
+        const tags = await Tag.find(_query, { name: 1, slug: 1 }).skip((_page - 1) * _offset).limit(_offset).sort({ createdAt: -1})
+        
+        const _total = await Tag.countDocuments(_query);
+        const _totalPages = Math.ceil(_total / parseInt(_offset));
+        let _next = null;
+        let _previous = null;
+        if (_page < _totalPages) _next = _page + 1;
+        if (_page > 1 && _total > 0) _previous = _page - 1;
         return res.status(200).json({
-            message: "",
+            message: "Sucesso",
+            previous: _previous,
+            next: _next,
+            currentPage: _page,
+            total: _total,
             data: tags
         })
   

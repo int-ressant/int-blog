@@ -9,27 +9,21 @@ const UserSchema = Schema({
     },
     email: {
         type: String,
-        required: true
     },
     githubId: {
-        type: String,
-        required: false
+        type: String
     },
     googleId: {
         type: String,
-        required: false,
     },
     facebookId: {
         type: String,
-        required: false,
     },
     password: {
-        type: String,
-        required: false
+        type: String
     },
     profilePicture:{
-        type: String,
-        required: false
+        type: String
     },
     verified: {
         type: Boolean,

@@ -600,6 +600,33 @@
                     }
                 }
             }
+        },
+        "/api/tags": {
+            "get": {
+                "summary": "Listagem de todas tags.",
+                "description": "Pega todas tags ",
+                "tags": ["Tags"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "type": "integer"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
         }
         
     }

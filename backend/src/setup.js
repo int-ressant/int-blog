@@ -4,25 +4,43 @@ const app = express();
 const cors = require('cors');
 const swaggerUI = require('swagger-ui-express');
 const swaggerDocumment = require('../swagger.json');
+const passport = require('passport');
+const session = require('express-session');
 
 require('dotenv').config()
+require('./config/passport')(passport)
 
 //routes import
 const UserRoutes = require('./routes/user');
 const TagRoutes = require('./routes/tag');
 const PostRoutes = require('./routes/post');
 const CodeRoutes = require('./routes/code');
+const OauthRoutes = require('./routes/auth/exporter');
 
 
 //setup app JSON
 app.use(express.json());
 app.use(cors());
 
+//sesstion setup
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}))
+
+//passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 //section for routes
 app.use('/api', CodeRoutes);
 app.use('/api', UserRoutes);
 app.use('/api', TagRoutes);
 app.use('/api', PostRoutes);
+app.use('/auth', OauthRoutes.googleAuthRoutes);
+app.use('/auth', OauthRoutes.githubAuthRoutes);
+app.use('/auth', OauthRoutes.facebookAuthRoutes);
 app.use('/api', swaggerUI.serve, swaggerUI.setup(swaggerDocumment));
 
 // setup global error handler
