@@ -30,7 +30,7 @@ export default function Home() {
   const observer = useRef();
 
   const lastPostElementRef = useCallback((node) => {
-    console.log(node);
+    // console.log(node);
     if (loading) return;
     if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver((entries) => {
@@ -47,15 +47,18 @@ export default function Home() {
   const { userData } = useAuth();
 
   const getPosts = async () => {
+    setLoading(true);
     api
-      .get(`/posts?page=${page}`)
+      .get(`/posts?page=${page}&offset=2`)
       .then((res) => {
-        setLoading(false);
+        
 
         console.log(res.data);
         console.log(res.data.data[0].title);
         setPosts((prevPosts) => [...prevPosts, ...res.data.data]);
-        setHasMore(res.data.currentPage === res.data.total);
+        setHasMore(res.data.next !== null);
+        setLoading(false);
+        res.data.next===null && console.log('fim');
         // setHasMore(res.data.length>posts.length);
       })
       .catch((err) => {
@@ -107,12 +110,24 @@ export default function Home() {
       getPosts();
     }
     if (userData.type === "Regular") {
-      getPostByUser();
+      // getPostByUser();
+      getPosts();
+    }else{
+      toast({
+        position: "top",
+        title: "Bem vindo. Nao tem sessao iniciada",
+        status: "warning",
+      });
+      getPosts();
     }
   }, []);
 
   useEffect(() => {
-    console.log(page);
+    if(page>1){
+      console.log('page:',page, 'hasmore:',hasMore);
+      hasMore && getPosts();
+    }
+    
   }, [page]);
 
   const handlePublish = () => {
@@ -259,50 +274,50 @@ export default function Home() {
                     <TabPanels>
                       <TabPanel align="start" w="50vw">
                         {posts.map((item, index) => {
-                          const isLastElement = posts.length === index + 1;
-                          if (isLastElement) {
-                            return (
-                              <ShortenArticle
-                                myref={lastPostElementRef}
-                                description={item.slug}
-                                title={item.title}
-                                datetime={item.createdAt}
-                                username="author"
-                                comments="50"
-                                views={item.views.count}
-                              />
-                            );
-                          } else {
-                            return (
-                              <ShortenArticle
-                                description={item.slug}
-                                title={item.title}
-                                datetime={item.createdAt}
-                                username="author"
-                                comments="50"
-                                views={item.views.count}
-                                tag1={item.tags[0]}
-                                tag2={item.tags[1]}
-                                tag3={item.tags[2]}
-                              />
-                            );
-                          }
-                          // return(
+                          let isLastElement = posts.length === index + 1;
+                          // if (isLastElement) {
+                          //   return (
+                          //     <ShortenArticle
+                          //       myref={lastPostElementRef}
+                          //       description={item.slug}
+                          //       title={item?.title}
+                          //       datetime={item.createdAt}
+                          //       username="author"
+                          //       comments="50"
+                          //       views={item.views.count}
+                          //     />
+                          //   );
+                          // } else {
+                          //   return (
+                          //     <ShortenArticle
+                          //       description={item.slug}
+                          //       title={item?.title}
+                          //       datetime={item.createdAt}
+                          //       username="author"
+                          //       comments="50"
+                          //       views={item.views.count}
+                          //       tag1={item.tags[0]}
+                          //       tag2={item.tags[1]}
+                          //       tag3={item.tags[2]}
+                          //     />
+                          //   );
+                          // }
+                          return(
                           // isLastElement ? (<div ref={lastPostElementRef} key={index}>{item.title}</div>) :
-                          //   isLastElement ? (<ShortenArticle myref={lastPostElementRef} description={item.description} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />) :
-                          // <ShortenArticle description={item.slug} title={item.title}  datetime={item.createdAt}
-                          //  username='author' comments='50' views={item.views.count} tag1={item.tags[0]} tag2={item.tags[1]} tag3={item.tags[2]}
-                          //  />
+                            isLastElement ? (<ShortenArticle myref={lastPostElementRef} description={item.description} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />) :
+                          <ShortenArticle description={item.slug} title={item.title}  datetime={item.createdAt}
+                           username='author' comments='50' views={item.views.count} tag1={item.tags[0]} tag2={item.tags[1]} tag3={item.tags[2]}
+                           />
 
                           //  <>
 
-                          //   <ShortenArticle description={item.slug} title={item.title}  datetime={item.createdAt}
-                          //    username='author' comments='50' views={item.views.count} tag1={item.tags[0]} tag2={item.tags[1]} tag3={item.tags[2]}
-                          //    />
+                            // <ShortenArticle description={item.slug} title={item.title}  datetime={item.createdAt}
+                            //  username='author' comments='50' views={item.views.count} tag1={item.tags[0]} tag2={item.tags[1]} tag3={item.tags[2]}
+                            //  />
                           //    {isLastElement && (<><ShortenArticle myref={lastPostElementRef} description={item.description} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} /></>)}
                           // </>
 
-                          // )
+                          )
                         })}
                         <div>{loading && "Loading..."}</div>
                         {/* <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
