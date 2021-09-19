@@ -9,7 +9,6 @@ const UserSchema = Schema({
     },
     email: {
         type: String,
-        required: true
     },
     githubId: {
         type: String

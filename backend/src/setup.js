@@ -15,7 +15,7 @@ const UserRoutes = require('./routes/user');
 const TagRoutes = require('./routes/tag');
 const PostRoutes = require('./routes/post');
 const CodeRoutes = require('./routes/code');
-const oAuthRoutes = require('./routes/oAuth');
+const OauthRoutes = require('./routes/auth/exporter');
 
 
 //setup app JSON
@@ -38,7 +38,8 @@ app.use('/api', CodeRoutes);
 app.use('/api', UserRoutes);
 app.use('/api', TagRoutes);
 app.use('/api', PostRoutes);
-app.use('/auth', oAuthRoutes);
+app.use('/auth', OauthRoutes.googleAuthRoutes);
+app.use('/auth', OauthRoutes.githubAuthRoutes);
 app.use('/api', swaggerUI.serve, swaggerUI.setup(swaggerDocumment));
 
 // setup global error handler

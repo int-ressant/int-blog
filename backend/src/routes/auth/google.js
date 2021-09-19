@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport');
-const { getType, setType } = require('../config/global')
+const { getType, setType } = require('../../config/global')
 const JWT_SECRET = process.env.JWT_SECRET;
 const jwt = require('jsonwebtoken');
 
@@ -9,7 +9,7 @@ router.get('/google', passport.authenticate('google', { scope: [
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/userinfo.email'
 ] } ));
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/failure'}), async (req, res) => {
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/auth/failure'}), async (req, res) => {
     
     let response = req.user;
     if(String(response.status).startsWith('2')){
@@ -39,12 +39,12 @@ router.get('/llogin', (req, res)=> {
     </div>`)
 })
 
-router.post('/google/login', (req, res)=> {
+router.get('/google/login', (req, res)=> {
     setType('login');
     return res.redirect('/auth/google');
 })
 
-router.post('/google/register', (req, res)=> {
+router.get('/google/register', (req, res)=> {
     setType('register');
     return res.redirect('/auth/google');
 })
@@ -53,7 +53,7 @@ router.post('/google/register', (req, res)=> {
 router.get('/failure', (req, res) => {
     
     return res.status(401).json({
-        message: "Houve um erro ao realizar o login",
+        message: "Houve um erro ao realizar a operação",
         data: []
     })
 })
