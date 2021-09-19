@@ -68,6 +68,7 @@ function Login() {
       
 
       Cookies.set('int@token',res.data.data.token);
+      api.defaults.headers.common['Authorization']=res.data.data.token;
       handleLogin(newData);
       setLoading(false);
 

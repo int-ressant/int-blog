@@ -12,6 +12,7 @@ class MyDocument extends Document {
           
         <Head>
         <link rel="preload" href="https://iblogapi.herokuapp.com/api/" as="fetch" crossOrigin="anonymous"/>
+        <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
         </Head>
         <body>
           <Main />
