@@ -49,6 +49,12 @@ useEffect(()=>{
  
 },[])
 
+useEffect(()=>{
+ // console.log(post);
+ getPost();
+ 
+},[router.isReady])
+
 const getPost=async()=>{
 api.get(`https://iblogapi.herokuapp.com/api/posts/${slug}/single`).then((res)=>{
  console.log(res.data);

@@ -62,6 +62,11 @@ export default function CreatePost() {
         }).catch((err)=>{
             console.log(err);
             console.log(err?.response.data.message);
+            toast({
+                title:'Erro ao publicar',
+                description:err?.message,
+                status:'error'
+            })
         })
     }
 
@@ -101,9 +106,9 @@ export default function CreatePost() {
                         <Button w='120' backgroundColor='gray.200'>Adiconar Foto de capa</Button>
                         <Box w='60%' h='100%' backgroundColor='green.100'>
                             <Flex ml='2'>
-                                <Button onClick={()=>handleAddTag(tag)} variant='ghost' backgroundColor='transparent' >Adicionar tag</Button>
+                                <Button onClick={()=>handleAddTag(tag)} variant='unstyled' mr='2' backgroundColor='transparent' >Adicionar tag</Button>
                                 <Flex  alignItems='center' w='70%' >
-                                <Input value={tag} onChange={(e)=>setTag(e.currentTarget.value)} placeholder="escreva a tag" size="sm" />
+                                <Input variant='unstyled' value={tag} onChange={(e)=>setTag(e.currentTarget.value)} placeholder="escreva a tag" size="sm" />
                                 
                                 </Flex>
                             </Flex>
