@@ -1,18 +1,71 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import dynamic from 'next/dynamic';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
+import { useRouter } from 'next/router';
+import { api } from '../../../lib/api';
 
 const MDEditor = dynamic(
  () => import("@uiw/react-md-editor").then((mod) => mod.default),
  { ssr: false }
 );
 
-export default function ViewPost() {
+// export const getStaticPaths=async()=>{
+
+
+//  return {
+//   paths:[
+//    {params:{slug},fallback:false},
+   
+//   ]
+//  }
+// }
+
+// export const getStaticProps=async()=>{
+//  // const slug= context.params.slug;
+//  const router=useRouter();
+// const {slug}=router.query;
+
+//  const res=await fetch(`https://iblogapi.herokuapp.com/api/posts/${slug}/single`);
+//  const data= await res.json();
+
+//  return {
+//    props: {post:data},
+//    fallback:false
+//  }
+// }
+
+export default function ViewPost({post}) {
+
+const router=useRouter();
+const {slug}=router.query;
+const [data,setData]=useState([]);
+
+
+useEffect(()=>{
+ // console.log(post);
+ getPost();
+ 
+},[])
+
+const getPost=async()=>{
+api.get(`https://iblogapi.herokuapp.com/api/posts/${slug}/single`).then((res)=>{
+ console.log(res.data);
+ setData(res.data);
+}).catch((err)=>{
+ console.log(err);
+})
+
+
+}
+
  return (
   <Flex flexDirection='column' flex='1' width='100vw'>
-   <MDEditor style={{width: '100%', height: '500px' }} height={350}  value={'hello'} onChange={(e)=>setData(e)}/>
+   <Text>{slug}</Text>
+  
+   <MDEditor hideToolbar preview='preview'  height={'900'} width='100vw'  value={data.data.body} onChange={(e)=>setData(e)}/>
+   {/* <MDEditor.Markdown  style={{width: '100%', height: '100vh' }} height={'100vh'}  source='hello'/> */}
   </Flex>
  )
 }

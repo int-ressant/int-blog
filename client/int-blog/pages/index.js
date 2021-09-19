@@ -109,6 +109,14 @@ export default function Home() {
     setTabIndex(index);
   }
 
+  const handleViewPost=(slug)=>{
+    router.push(`/post/${slug}/single`);
+  }
+  
+  const handleViewTag=(tag)=>{
+
+  }
+
   useEffect(() => {
     setLoading(true);
 
@@ -342,9 +350,10 @@ export default function Home() {
                           // }
                           return(
                           // isLastElement ? (<div ref={lastPostElementRef} key={index}>{item.title}</div>) :
-                            isLastElement ? (<ShortenArticle myref={lastPostElementRef} description={item.description} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />) :
-                          <ShortenArticle description={item.slug} title={item.title}  datetime={item.createdAt}
-                           username='author' comments='50' views={item.views.count} tag1={item.tags[0]} tag2={item.tags[1]} tag3={item.tags[2]}
+                          // actionTag={()=>handleViewTag(item.tags[])} 
+                            isLastElement ? (<ShortenArticle actionPost={()=>handleViewPost(item.slug)} key={item.slug} actionTag={handleViewTag} myref={lastPostElementRef} description={item.description} title={item.title}  datetime={item.createdAt} username='author' comments='50' views={item.views.count} />) :
+                          <ShortenArticle actionPost={()=>handleViewPost(item.slug)} actionTag={handleViewTag}  description={item.slug} title={item.title}  datetime={item.createdAt}
+                           username='author' comments='50' views={item.views.count} tags={[...item.tags]} tag1={item.tags[0]} tag2={item.tags[1]} tag3={item.tags[2]}
                            />
 
                           //  <>
