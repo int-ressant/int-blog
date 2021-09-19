@@ -9,7 +9,7 @@ router.get('/google', passport.authenticate('google', { scope: [
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/userinfo.email'
 ] } ));
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/auth/failure'}), async (req, res) => {
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/auth/google/failure'}), async (req, res) => {
     
     let response = req.user;
     if(String(response.status).startsWith('2')){
@@ -50,7 +50,7 @@ router.get('/google/register', (req, res)=> {
 })
 
 //failure route
-router.get('/failure', (req, res) => {
+router.get('/google/failure', (req, res) => {
     
     return res.status(401).json({
         message: "Houve um erro ao realizar a operação",

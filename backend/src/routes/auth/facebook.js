@@ -4,10 +4,10 @@ const { getType, setType } = require('../../config/global')
 const JWT_SECRET = process.env.JWT_SECRET;
 const jwt = require('jsonwebtoken');
 
-router.get('/github', passport.authenticate('github'));
+router.get('/facebook', passport.authenticate('facebook'));
 
 //callback url
-router.get('/github/callback', passport.authenticate('github', { failureRedirect: '/auth/github/failure'}), async(req, res) => {
+router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/auth/facebook/failure'}), async(req, res) => {
     let response = req.user;
     if(String(response.status).startsWith('2')){
         const token = await jwt.sign({id: response.user.id }, JWT_SECRET, { expiresIn: '7d'});
@@ -28,18 +28,18 @@ router.get('/github/callback', passport.authenticate('github', { failureRedirect
     }
 });
 
-router.get('/github/login', (req, res)=> {
+router.get('/facebook/login', (req, res)=> {
     setType('login');
-    return res.redirect('/auth/github');
+    return res.redirect('/auth/facebook');
 })
 
-router.get('/github/register', (req, res)=> {
+router.get('/facebook/register', (req, res)=> {
     setType('register');
-    return res.redirect('/auth/github');
+    return res.redirect('/auth/facebook');
 })
 
 //failure route
-router.get('/github/failure', (req, res) => {
+router.get('/facebook/failure', (req, res) => {
     
     return res.status(401).json({
         message: "Houve um erro ao realizar a operação",

@@ -40,6 +40,7 @@ app.use('/api', TagRoutes);
 app.use('/api', PostRoutes);
 app.use('/auth', OauthRoutes.googleAuthRoutes);
 app.use('/auth', OauthRoutes.githubAuthRoutes);
+app.use('/auth', OauthRoutes.facebookAuthRoutes);
 app.use('/api', swaggerUI.serve, swaggerUI.setup(swaggerDocumment));
 
 // setup global error handler
