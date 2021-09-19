@@ -2,6 +2,9 @@ import {
   Box,
   Button,
   Flex,
+  Input,
+  InputLeftElement,
+  InputGroup,
   Tab,
   TabList,
   TabPanel,
@@ -20,12 +23,15 @@ import ShortenArticle from "../components/shortenArticle";
 import { useAuth } from "../contexts/authContext";
 import { api } from "../lib/api";
 import styles from "../styles/Home.module.css";
+import {FaSearch,FaFilter} from 'react-icons/fa'
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [itsAll, setItsAll] = useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
 
   const observer = useRef();
 
@@ -59,6 +65,7 @@ export default function Home() {
         setHasMore(res.data.next !== null);
         setLoading(false);
         res.data.next===null && console.log('fim');
+        setItsAll(res.data.next===null);
         // setHasMore(res.data.length>posts.length);
       })
       .catch((err) => {
@@ -97,6 +104,10 @@ export default function Home() {
         });
       });
   };
+
+  const handleTabsChange=(index)=>{
+    setTabIndex(index);
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -210,14 +221,41 @@ export default function Home() {
       </Head>
 
       <Box className={styles.main}>
-        <Flex flex="5">
+        <Flex  flex="5">
           <Flex
             flex="1"
-            //  bg="blue"
-          ></Flex>
-          <Flex flexDirection="column" flex="3">
-            {/* <ClickablesSection /> */}
-            {/* <AdSection /> */}
+            h='80vh'
+            w='20vw'
+            position='fixed'
+            // backgroundColor='green.300' 
+            alignItems='center'
+            justifyContent='center'
+            flexDirection='column'
+            >
+              {/* <Flex
+            flex="1"
+            
+           
+            
+          
+            alignItems='center'
+            > */}
+              <Button w='90%' p='10' mt='120' >Home</Button>
+              <Button w='90%' p='10' mt='5' >Pesquisar</Button>
+              <Button w='90%' p='10' mt='5' >Ajuda</Button>
+            </Flex>
+          <Flex ml='20vw' flexDirection="column" flex="3">
+          {/* <Flex  flexDirection="column" flex="3"> */}
+           
+
+            {/* <Box zIndex='10' p='5' w='60vw' borderRadius='10' backgroundColor='blue.dark' position='fixed' >
+              <InputGroup flexDirection='row' alignItems='center'>
+              <InputLeftElement alignItems='center' pointerEvents="none" children={<FaSearch color="white" />}/>
+              <Input color='white' variant="flushed" />
+              </InputGroup>
+              </Box> */}
+
+
             <Button
               onClick={handlePublish}
               alignSelf="center"
@@ -235,11 +273,21 @@ export default function Home() {
             <Flex flex="1">
               <Flex p="10" w="100%" justifyContent="space-between">
                 <Text ml="5" fontWeight="bold" color="blue.dark">
-                  Feed
+                  {tabIndex===0 ? 'Feed':'Pesquisar'}
                 </Text>
                 <Flex flex="1">
-                  <Tabs variant="unstyled" align="end" colorScheme="green">
+                  <Tabs index={tabIndex} onChange={handleTabsChange} variant="unstyled" align="end" colorScheme="green">
                     <TabList>
+                      <Tab
+                        _selected={{
+                          bg: "blue.dark",
+                          color: "white",
+                          fontWeight: "bold",
+                          borderRadius: "10",
+                        }}
+                      >Recentes
+                        
+                      </Tab>
                       <Tab
                         _selected={{
                           bg: "blue.dark",
@@ -258,17 +306,7 @@ export default function Home() {
                           borderRadius: "10",
                         }}
                       >
-                        Sugeridos
-                      </Tab>
-                      <Tab
-                        _selected={{
-                          bg: "blue.dark",
-                          color: "white",
-                          fontWeight: "bold",
-                          borderRadius: "10",
-                        }}
-                      >
-                        Recentes
+                        Pesquisar
                       </Tab>
                     </TabList>
                     <TabPanels>
@@ -320,15 +358,27 @@ export default function Home() {
                           )
                         })}
                         <div>{loading && "Loading..."}</div>
+                        <Box  alignItems='center' w='100%' justifyContent='center' ><Text textAlign='center'>{itsAll && 'Sem mais posts'}</Text></Box>
+                        
                         {/* <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
                         <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
                         <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' />
                         <ShortenArticle description='Something soweto' title='Big title' datetime='20:20 de Julho de 2021' username='paichato' comments='50' views='44' /> */}
                       </TabPanel>
                       <TabPanel align="start" w="50vw">
+                     
                         <p>two!</p>
                       </TabPanel>
-                      <TabPanel align="start" w="50vw"></TabPanel>
+                      <TabPanel align="start" w="50vw">
+                      <Flex flexDirection='row' p='5' w='80%' justifyContent='space-between' borderRadius='10'  >
+              <InputGroup flexDirection='row' alignItems='center'>
+              <InputLeftElement alignItems='center' pointerEvents="none" children={<FaSearch color="#003049" />}/>
+              <Input color='blue.dark' variant="flushed" />
+              </InputGroup>
+              <Button w='20%' ><Text mr='2'>filtrar</Text><FaFilter /></Button>
+              </Flex> 
+              <p>3!</p>
+                      </TabPanel>
                     </TabPanels>
                   </Tabs>
                 </Flex>
